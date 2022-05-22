@@ -1,3 +1,0 @@
-[console_scripts]
-pydump = main.__main__:main
-
