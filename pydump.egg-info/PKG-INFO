@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: pydump
+Version: 1.0.0
+Summary: a pyfile decomplier base on pycdc for windows
+Home-page: https://github.com/serfend/pydump
+Author: serfend
+Author-email: serfend@foxmail.com
+License: MIT Licence
+Keywords: pydump,decomplier,pe,elf,pyc,pyz
+Platform: any
+
+a tool for decomplier exe,elf,pyz,pyc packed by python which is base on pycdc.sometimes its result not exactly right ,maybe could use uncompyle6 etc.
+

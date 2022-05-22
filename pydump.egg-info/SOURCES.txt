@@ -1,0 +1,7 @@
+setup.py
+pydump.egg-info/PKG-INFO
+pydump.egg-info/SOURCES.txt
+pydump.egg-info/dependency_links.txt
+pydump.egg-info/entry_points.txt
+pydump.egg-info/requires.txt
+pydump.egg-info/top_level.txt
