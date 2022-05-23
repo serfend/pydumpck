@@ -1,4 +1,5 @@
 
+.vscode/*
 dist/*
 pydumpck.egg-info/*
 *.pyc
