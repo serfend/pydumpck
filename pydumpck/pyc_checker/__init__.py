@@ -1,9 +1,15 @@
 import os
 import subprocess
-
+import sys
 default_header: bytes = bytes.fromhex('550D0D0A00000000FF7FFF61568C0000')
-bin_path = './pyc_checker/bin/'
+bin_path = '/bin/'.replace('/', os.path.sep)
+package_dir = os.path.dirname(os.path.realpath(__file__))
+bin_path = f'{package_dir}{bin_path}'
 pycdc_file = f'{bin_path}pycdc.exe' if os.name == 'nt' else f'{bin_path}pycdc'
+if not os.path.isfile(pycdc_file):
+    print(f'[!]required binary file is not exist:{pycdc_file}')
+    sys.exit(-1)
+
 
 def get_e3(data: bytes):
     pos = data.find(b'\xe3')
