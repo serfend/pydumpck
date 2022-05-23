@@ -1,3 +1,4 @@
+import __version__
 import threading
 import pyc_checker.pyz_extract
 import time
@@ -112,7 +113,6 @@ class PackageStruct:
     total_count: int = 0
 
     def __init__(self):
-        print('[*] init struct')
         self.thread_count = thread_count or multiprocessing.cpu_count()
         self.pool = ThreadPoolExecutor(max_workers=self.thread_count)
 
@@ -291,16 +291,17 @@ class PackageDescription:
 
 
 def run():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__version__.__description__)
     parser.add_argument(
         'target_file',
-        help="PyInstaller archive to show content of"
+        help="file to extract or decompiler,combine with -y for type select."
     )
 
     parser.add_argument(
         '-o',
         '--ouput',
         default='./output',
+        type=str,
         dest='output_directory',
         help='output archive file to (default: %(default)s).',
     )
@@ -308,6 +309,7 @@ def run():
         '-w',
         '--thread',
         default=0,
+        type=int,
         dest='thread',
         help='thread count for running (default: %(default)s) cpu-count * 2.',
     )
@@ -316,6 +318,7 @@ def run():
         '-t',
         '--timeout',
         default=10,
+        type=int,
         dest='timeout',
         help='timeout running single decompiler (default: %(default)s).',
     )
@@ -324,11 +327,23 @@ def run():
         '-y',
         '--type',
         default=None,
+        type=str,
         dest='target_file_type',
         help='file-type of input file,can use pe,exe,elf,pyc,pyz (default: %(default)s : auto guess).',
     )
-    args = parser.parse_args()
-
+    parser.add_argument(
+        '-v',
+        '--version',
+        default=False,
+        nargs=argparse.OPTIONAL,
+        type=bool,
+        dest='show_version',
+        help='show version of package',
+    )
+    args = parser.parse_args(args=sys.argv)
+    if not args.show_version == False:
+        print(__version__.__version__)
+        return
     try:
         raise SystemExit(main(**vars(args)))
     except KeyboardInterrupt:
@@ -336,5 +351,5 @@ def run():
 
 
 if __name__ == '__main__':
-    # run()
-    main('http_server.exe', './output')
+    run()
+    # main('http_server.exe', './output')
