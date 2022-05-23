@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import subprocess
-import codecs
 import os
 import shutil
 import sys
+from importlib_metadata import entry_points
 from setuptools import setup, find_packages
 pck_name = 'pydumpck'
 pck_dict = {}
 pck_dict[pck_name] = pck_name
 package_dir = os.path.dirname(os.path.realpath(__file__))
-long_description = codecs.open(os.path.join(
-    package_dir, "README.md"), "r", 'utf-8').read()
+with open('README.md', 'r', encoding='utf-8') as f:
+    long_description = f.read()
 
 
 def remove_dist(target: str):
@@ -40,6 +40,12 @@ def load_requirements():
         install_requires = []
     return install_requires
 
+
+entry_points = {
+    'console_scripts': [
+        f'{pck_name} = {pck_name}:run',
+    ],
+}
 
 about = load_about()
 install_requires = load_requirements()
@@ -74,26 +80,21 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
-        "Topic :: Internet :: WWW/HTTP",
         "Topic :: Software Development :: Libraries",
     ],
     keywords=about["__keywords__"],
     long_description=long_description,
-
+    long_description_content_type="text/markdown",
     packages=find_packages(),
     platforms='any',
     install_requires=install_requires,
-    entry_points={
-        'console_scripts': [
-            f'{pck_name} = {pck_name}__main__:main'
-        ]
-    }
+    entry_points=entry_points
 )
 
 
 def upload():
     p = subprocess.run(
-        ['twine', 'upload', f'{about["__public_path__"]}/*'])
+        ['twine', 'upload', f'{about["__public_path__"]}/*', '--verbose'])
 
 
 if any([x.find('dist') > -1 for x in sys.argv]):

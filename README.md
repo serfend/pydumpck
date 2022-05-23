@@ -22,6 +22,32 @@ pip install pydumpck
 ## Usage
 
 ```shell
-python -m pydumpck xxx.exe
+usage: pydumpck [-h] [-o OUTPUT_DIRECTORY] [-w THREAD] [-t TIMEOUT] [-y TARGET_FILE_TYPE] target_file
+
+positional arguments:
+  target_file           PyInstaller archive to show content of
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTPUT_DIRECTORY, --ouput OUTPUT_DIRECTORY
+                        output archive file to (default: ./output).
+  -w THREAD, --thread THREAD
+                        thread count for running (default: 0) cpu-count * 2.
+  -t TIMEOUT, --timeout TIMEOUT
+                        timeout running single decompiler (default: 10).
+  -y TARGET_FILE_TYPE, --type TARGET_FILE_TYPE
+                        file-type of input file,can use pe,exe,elf,pyc,pyz (default: None : auto guess).
 ```
+
+- demo
+
+```shell
+pydumpck xxx.exe
+pydumpck xxx.elf
+pydumpck xxx.pyc
+pydumpck xxx.pyz
+pydumpck xxx.exe --output ./output --thread 8 --timeout 10
+```
+
+
 
