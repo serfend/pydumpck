@@ -85,7 +85,7 @@ def get_filetype(filepath: str):
     return 'TYPE_UNKNOWN'
 
 
-def extract_arch(arch: CArchiveReader | ZlibArchive, current_directory: str):
+def extract_arch(arch, current_directory: str):
     global file_struct_pyc
     if not os.path.exists(current_directory):
         os.makedirs(current_directory)
