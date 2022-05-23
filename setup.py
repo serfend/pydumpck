@@ -99,4 +99,3 @@ def upload():
 
 if any([x.find('dist') > -1 for x in sys.argv]):
     upload()
-    clear_dist()
