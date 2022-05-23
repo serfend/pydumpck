@@ -46,7 +46,7 @@ action_map = {
 }
 
 
-def main(target_file: str, output_directory: str, thread: int = 0, timeout: int = 10, target_file_type: str = None):
+def main(target_file: str, output_directory: str, thread: int = 0, timeout: int = 10, target_file_type: str = None, **args):
     global thread_count
     global thread_timeout
     global thread_output_directory
@@ -340,7 +340,7 @@ def run():
         dest='show_version',
         help='show version of package',
     )
-    args = parser.parse_args(args=sys.argv)
+    args = parser.parse_args()
     if not args.show_version == False:
         print(__version__.__version__)
         return
