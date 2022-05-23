@@ -1,3 +1,4 @@
 
 dist/*
 pydumpck.egg-info/*
+*.pyc
