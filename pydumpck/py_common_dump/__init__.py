@@ -63,7 +63,7 @@ class CommonDump():
             except:
                 pass
         file_type = target_file_type or self.get_filetype(target_file)
-        dispatch_to = self.action_dispatch.get(file_type, None)
+        dispatch_to = self.action_map.get(file_type, None)
         if not dispatch_to in self.action_dispatch:
             result = f'unkonwn file-type:{file_type}->{dispatch_to}'
         else:
