@@ -1,0 +1,96 @@
+  3           0 LOAD_CONST               0 ('Input flag:')
+              3 PRINT_ITEM          
+              4 PRINT_NEWLINE       
+
+  4           5 LOAD_NAME                0 (input)
+              8 CALL_FUNCTION            0
+             11 STORE_NAME               1 (flag)
+
+  6          14 LOAD_CONST               1 (47378)
+             17 LOAD_CONST               2 (29475)
+             20 LOAD_CONST               3 (46200)
+             23 LOAD_CONST               4 (39869)
+             26 LOAD_CONST               5 (67243)
+             29 LOAD_CONST               6 (68695)
+             32 LOAD_CONST               7 (73129)
+             35 LOAD_CONST               8 (27171)
+             38 LOAD_CONST               9 (53832)
+             41 LOAD_CONST              10 (30653)
+             44 LOAD_CONST              11 (60541)
+             47 LOAD_CONST              12 (67276)
+             50 LOAD_CONST              13 (58816)
+             53 LOAD_CONST              14 (63571)
+             56 LOAD_CONST              15 (50131)
+             59 LOAD_CONST              16 (34471)
+             62 LOAD_CONST              17 (67922)
+             65 LOAD_CONST              18 (82293)
+             68 LOAD_CONST              19 (33259)
+             71 LOAD_CONST              20 (67538)
+             74 LOAD_CONST              21 (57810)
+             77 LOAD_CONST              22 (50339)
+             80 LOAD_CONST              23 (34632)
+             83 LOAD_CONST              24 (68754)
+             86 LOAD_CONST              25 (83192)
+             89 LOAD_CONST              26 (36077)
+             92 LOAD_CONST              27 (60424)
+             95 LOAD_CONST              28 (54547)
+             98 LOAD_CONST              29 (56308)
+            101 LOAD_CONST              30 (33565)
+            104 LOAD_CONST              31 (69425)
+            107 LOAD_CONST              32 (84024)
+            110 BUILD_LIST              32
+            113 STORE_NAME               2 (arr)
+
+  8         116 LOAD_CONST              33 (22643)
+            119 STORE_NAME               3 (k)
+
+ 10         122 SETUP_LOOP              92 (to 217)
+            125 LOAD_NAME                4 (range)
+            128 LOAD_CONST              34 (32)
+            131 CALL_FUNCTION            1
+            134 GET_ITER            
+        >>  135 FOR_ITER                78 (to 216)
+            138 STORE_NAME               5 (i)
+
+ 11         141 LOAD_NAME                6 (ord)
+            144 LOAD_NAME                1 (flag)
+            147 LOAD_NAME                5 (i)
+            150 BINARY_SUBSCR       
+            151 CALL_FUNCTION            1
+            154 LOAD_CONST              35 (255)
+            157 BINARY_MULTIPLY     
+            158 LOAD_NAME                3 (k)
+            161 BINARY_ADD          
+            162 STORE_NAME               7 (num)
+
+ 13         165 LOAD_NAME                7 (num)
+            168 LOAD_NAME                2 (arr)
+            171 LOAD_NAME                5 (i)
+            174 BINARY_SUBSCR       
+            175 COMPARE_OP               3 (!=)
+            178 POP_JUMP_IF_FALSE      199
+
+ 14         181 LOAD_CONST              36 ('Error')
+            184 PRINT_ITEM          
+            185 PRINT_NEWLINE       
+
+ 15         186 LOAD_NAME                8 (exit)
+            189 LOAD_CONST              37 (0)
+            192 CALL_FUNCTION            1
+            195 POP_TOP             
+            196 JUMP_FORWARD             0 (to 199)
+
+ 16     >>  199 LOAD_NAME                3 (k)
+            202 LOAD_NAME                7 (num)
+            205 BINARY_ADD          
+            206 LOAD_CONST              38 (65535) 
+            209 BINARY_AND          
+            210 STORE_NAME               3 (k)
+            213 JUMP_ABSOLUTE          135
+        >>  216 POP_BLOCK           
+
+ 18     >>  217 LOAD_CONST              39 ('Right,the flag is DASCTF{Input}')
+            220 PRINT_ITEM          
+            221 PRINT_NEWLINE       
+            222 LOAD_CONST              40 (None)
+            225 RETURN_VALUE        
