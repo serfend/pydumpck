@@ -4,3 +4,4 @@ build/*
 dist/*
 pydumpck.egg-info/*
 *.pyc
+*output*

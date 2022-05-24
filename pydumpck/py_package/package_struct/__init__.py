@@ -26,7 +26,8 @@ class PackageStruct:
         self.thread_count = configuration.thread_count or multiprocessing.cpu_count()
         self.pool = ThreadPoolExecutor(max_workers=self.thread_count)
 
-    def decompile_pyc(self, file: str):
+    @staticmethod
+    def decompile_pyc(file: str):
         # TODO log error from dump
         try:
             t = configuration.thread_timeout
@@ -39,7 +40,7 @@ class PackageStruct:
             print('[!]Exception on decompiler bytecode', file, e)
 
     def callback_pyc_decompile(self, f: str):
-        self.decompile_pyc(f)
+        PackageStruct.decompile_pyc(f)
         self.handle_count += 1
 
     def progress_check_pyc_decompile(self):

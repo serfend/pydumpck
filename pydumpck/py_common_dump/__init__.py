@@ -42,7 +42,7 @@ class CommonDump():
         output_dir = self.build_output_dir()
         new_file = f'{output_dir}{os.path.sep}{target_file}'
         shutil.copy(target_file, new_file)
-        PackageStruct.decompile_pyc(None, new_file)
+        PackageStruct.decompile_pyc(new_file)
 
     def handle_arch_file(self, target_file: str):
         output_dir = self.build_output_dir()
