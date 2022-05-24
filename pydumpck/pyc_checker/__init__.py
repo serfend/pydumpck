@@ -7,8 +7,7 @@ package_dir = os.path.dirname(os.path.realpath(__file__))
 bin_path = f'{package_dir}{bin_path}'
 pycdc_file = f'{bin_path}pycdc.exe' if os.name == 'nt' else f'{bin_path}pycdc'
 if not os.path.isfile(pycdc_file):
-    print(f'[!]required binary file is not exist:{pycdc_file}')
-    sys.exit(-1)
+    raise Exception(f'[!]required binary file is not exist:{pycdc_file}')
 
 
 def get_e3(data: bytes):
