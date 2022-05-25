@@ -3,7 +3,6 @@
 import os
 import shutil
 import sys
-from importlib_metadata import entry_points
 from setuptools import setup, find_packages
 pck_name = 'pydumpck'
 pck_dict = {}
