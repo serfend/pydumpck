@@ -1,3 +1,4 @@
+import os
 from ... import configuration
 from ... import pyc_checker
 from concurrent.futures import ThreadPoolExecutor
@@ -96,6 +97,11 @@ class PackageStruct:
     def start_pyz_handle(self):
         if self.encrypt_key_file:
             src_file = f'{self.encrypt_key_file}.py'
+            if not os.path.exists(src_file):
+                src_file = f'{self.encrypt_key_file}.py.up6.py'
+            if not os.path.exists(src_file):
+                raise Exception(
+                    'target file seems encrypted,but encrypt_key fetch fail.')
             with open(src_file, encoding='utf-8') as f:
                 content = f.read()
                 g_dict = {'key': None}

@@ -6,7 +6,6 @@ import pydumpck.configuration as configuration
 from .common.res_type import *
 import shutil
 
-
 def start_arch_file(res_type_arch: Tuple):
     file_path, target_type = res_type_arch
     output_dir = f'{os.path.dirname(file_path)}/output'
