@@ -82,10 +82,9 @@ class CommonDump():
         configuration.progress_session_timeout = session_timeout
         configuration.decompile_file = dict(
             zip(decompile_file, [True for x in decompile_file])) if decompile_file else None
-
         CommonDump.load_plugins(plugin)
-        
-        print(f'[*] home path is:{os.path.abspath(".")}\ninput:{target_file},to:{output_directory}')
+        os.chdir(os.path.dirname(target_file))
+        print(f'[*] target file input:{target_file}\nto:{output_directory}')
 
         if os.path.exists(output_directory):
             print(f'[+] removing output_directory')
