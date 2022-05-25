@@ -13,7 +13,7 @@
 
 # What?
 
-pydumpck is a tool for decompile exe,elf,pyz,pyc packed by python which is base on pycdc.sometimes its py-file result not exactly right ,maybe could use uncompyle6 etc.
+pydumpck is a multi-threads tool for decompile exe,elf,pyz,pyc packed by python which is base on `pycdc` and `undecompyle6`.sometimes its py-file result not exactly right ,maybe could use uncompyle6.
 
 
 
@@ -28,10 +28,15 @@ pip install pydumpck
 ## Usage
 
 ```shell
-usage: pydumpck [-h] [-o OUTPUT_DIRECTORY] [-w THREAD] [-t TIMEOUT] [-y TARGET_FILE_TYPE] target_file
+usage: pydumpck [-h] [-o OUTPUT_DIRECTORY] [-w THREAD] [-t TIMEOUT] [--session-timeout TIMEOUT_SESSION]
+                [-y TARGET_FILE_TYPE] [-d [DECOMPILE_FILE ...]] [-v [SHOW_VERSION]] [-p [PLUGIN ...]]
+                [target_file]
+
+pydumpck is a tool for decompile exe,elf,pyz,pyc packed by python which is base on pycdc.sometimes its py-file result
+not exactly right ,maybe could use uncompyle6 etc.
 
 positional arguments:
-  target_file           PyInstaller archive to show content of
+  target_file           file to extract or decompiler,combine with -y for type select.
 
 options:
   -h, --help            show this help message and exit
@@ -41,13 +46,24 @@ options:
                         thread count for running (default: 0) cpu-count * 2.
   -t TIMEOUT, --timeout TIMEOUT
                         timeout running single decompiler (default: 10).
+  --session-timeout TIMEOUT_SESSION
+                        timeout running total task (default: 10).
   -y TARGET_FILE_TYPE, --type TARGET_FILE_TYPE
                         file-type of input file,can use pe,exe,elf,pyc,pyz (default: None : auto guess).
+  -d [DECOMPILE_FILE ...], --decompile_file [DECOMPILE_FILE ...]
+                        only decompile referred file for quick complete (default: None).
+  -v [SHOW_VERSION], --version [SHOW_VERSION]
+                        show version of package
+  -p [PLUGIN ...], --plugin [PLUGIN ...]
+                        enable decompiler plugins,split by space .example: `--plugin pycdc uncompyle6` (default:
+                        ['pycdc']).available:pycdc,uncompyle6
 ```
 
 
 
-## Example
+
+
+## Quick Start
 
 ```shell
 pydumpck xxx.exe
@@ -59,3 +75,24 @@ pydumpck xxx.exe --output ./output --thread 8 --timeout 10
 
 
 
+## Example
+
+- `-p/--plugin` specified which plugin to use for decompile (pycdc|uncompyle6)
+
+`pydumpck xxx.exe -p uncompyle6`
+
+`pydumpck xxx.exe -p pycdc uncompyle6`
+
+- `-d/--decompile_file` specified which file(s) to decompile for a faster run
+
+`pydumpck xxx.exe -d main` for only target `main.py`
+
+`pydumpck xxx.exe -d main lib_base64 secert` for targets `main.py` and `lib_base64.py` and `secert.py`
+
+## Notice
+
+> `pycdc` speed is more than 10 times faster than `uncompyle6` , and `uncompyle6` is not support for python that version above 3.8.
+>
+> however `pycdc` sometimes return a not precisely right result.
+>
+> in pydumpck , you can use `--plugin uncompyle6` for single-use or `--plugin pycdc uncompyle6` for both-use.
