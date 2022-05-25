@@ -5,10 +5,10 @@ import pydumpck.py_common_dump as dmp
 import pydumpck.configuration as configuration
 from .common.res_type import *
 import shutil
-
+import pydumpck.utils.paths
 def start_arch_file(res_type_arch: Tuple):
     file_path, target_type = res_type_arch
-    output_dir = f'{os.path.dirname(file_path)}/output'
+    output_dir = f'{os.path.dirname(file_path)}{os.path.sep}{pydumpck.utils.paths.get_random_path("output")}'
     configuration.thread_output_directory = output_dir
     dumper = dmp.CommonDump()
     dumper.handle_arch_file(file_path)

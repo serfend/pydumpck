@@ -3,6 +3,8 @@ from typing import List
 import pydumpck.__version__ as __version__
 from pydumpck.py_common_dump import CommonDump
 
+import pydumpck.utils.paths
+
 
 def run():
     parser = argparse.ArgumentParser(description=__version__.__description__)
@@ -15,7 +17,7 @@ def run():
     parser.add_argument(
         '-o',
         '--ouput',
-        default='output',
+        default=pydumpck.utils.paths.get_random_path('output'),
         type=str,
         dest='output_directory',
         help='output archive file to (default: %(default)s).',
@@ -95,4 +97,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-    # main('http_server.exe', './output')

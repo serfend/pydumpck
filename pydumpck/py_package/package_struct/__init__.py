@@ -1,6 +1,6 @@
 import os
-from ... import configuration
-from ... import pyc_checker
+from ... import configuration, pyc_checker
+from ...pyc_checker import extensions
 from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
 import time
@@ -32,7 +32,7 @@ class PackageStruct:
         # TODO log error from dump
         try:
             t = configuration.thread_timeout
-            code, err = pyc_checker.dump_pyc(file, f'{file}.py', t)
+            code, err = pyc_checker.dump_pyc(file, file, t)
             if code:
                 print('[+] decompiler bytecode', file, len(code))
             else:
@@ -65,7 +65,7 @@ class PackageStruct:
                 c = f'cost:{cost_time},timeout={time_out}'
                 raise Exception(f'{t}\n{c}\n')
             time.sleep(1)
-            print('\r', f'[*] {description}:{self.handle_count}/{self.total_count}',
+            print('\r', f'[*] {description}:{self.handle_count}{os.path.sep}{self.total_count}',
                   end='', flush=True)
             if self.handle_count > 0 and self.handle_count >= self.total_count:
                 break
@@ -96,9 +96,10 @@ class PackageStruct:
 
     def start_pyz_handle(self):
         if self.encrypt_key_file:
-            src_file = f'{self.encrypt_key_file}.py'
+            src_file = extensions.get_pycdc_path(
+                self.encrypt_key_file)
             if not os.path.exists(src_file):
-                src_file = f'{self.encrypt_key_file}.py.up6.py'
+                src_file = f'{extensions.get_uncompyle6_path(self.encrypt_key_file)}'
             if not os.path.exists(src_file):
                 raise Exception(
                     'target file seems encrypted,but encrypt_key fetch fail.')

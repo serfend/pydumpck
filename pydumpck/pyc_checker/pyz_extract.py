@@ -101,6 +101,3 @@ def _handle_file(f: BufferedReader, dirName: str, cipper_key: bytes):
         return filePath
     return [handle_single(key) for key in toc.keys()]
 
-
-if __name__ == '__main__':
-    extract_pyz_from_arch('./PYZ-00.pyz', b'bf56b157dedb3f75')
