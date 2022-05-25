@@ -1,12 +1,14 @@
 import argparse
-from . import __version__
-from .py_common_dump import CommonDump
+from typing import List
+import pydumpck.__version__ as __version__
+from pydumpck.py_common_dump import CommonDump
 
 
 def run():
     parser = argparse.ArgumentParser(description=__version__.__description__)
     parser.add_argument(
         'target_file',
+        nargs=argparse.OPTIONAL,
         help="file to extract or decompiler,combine with -y for type select."
     )
 
@@ -37,6 +39,14 @@ def run():
     )
 
     parser.add_argument(
+        '--session-timeout',
+        default=10,
+        type=int,
+        dest='timeout_session',
+        help='timeout running total task (default: %(default)s).',
+    )
+
+    parser.add_argument(
         '-y',
         '--type',
         default=None,
@@ -44,6 +54,16 @@ def run():
         dest='target_file_type',
         help='file-type of input file,can use pe,exe,elf,pyc,pyz (default: %(default)s : auto guess).',
     )
+
+    parser.add_argument(
+        '-d',
+        '--decompile_file',
+        nargs=argparse.ZERO_OR_MORE,
+        default=None,
+        dest='decompile_file',
+        help='only decompile referred file for quick complete (default: %(default)s).',
+    )
+
     parser.add_argument(
         '-v',
         '--version',
@@ -53,13 +73,22 @@ def run():
         dest='show_version',
         help='show version of package',
     )
+
+    parser.add_argument(
+        '-p',
+        '--plugin',
+        default=['pycdc'],
+        nargs=argparse.ZERO_OR_MORE,
+        dest='plugin',
+        help='enable decompiler plugins,split by space .example: `--plugin pycdc uncompyle6` (default: %(default)s).available:pycdc,uncompyle6',
+    )
     args = parser.parse_args()
     if not args.show_version == False:
         print(__version__.__version__)
         return
     try:
         dmp = CommonDump()
-        raise SystemExit(dmp.main(**vars(args)))
+        return dmp.main(**vars(args))
     except KeyboardInterrupt:
         raise SystemExit("Aborted by user request.")
 
