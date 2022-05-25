@@ -21,6 +21,7 @@ def test_commands_elf():
     sys.argv = [sys.argv[0]] + args
     pydumpck.pyinstaller_dump.run()
     output = f'{pydumpck.configuration.thread_output_directory}{os.path.sep}'
+    output = os.path.abspath(output)
     print(f'test output:{output}')
     assert os.path.exists(output)
     assert os.path.exists(f'{output}squid.pyc.py')
