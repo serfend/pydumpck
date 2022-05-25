@@ -28,7 +28,3 @@ def test_arch_file_decompyle6(res_type_arch: Tuple):
     configuration.progress_session_timeout = 120
     configuration.plugin_decompiler_enable_uncompyle6 = True
     return start_arch_file(res_type_arch)
-
-
-def test_command_line_result(res_type_all: Tuple):
-    pass

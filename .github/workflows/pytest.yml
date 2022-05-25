@@ -31,7 +31,7 @@ jobs:
           pipenv lock --clear
           pipenv install
           pipenv install pytest
-          # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test with pytest
         run: |
           pipenv run pytest -v --full-trace
