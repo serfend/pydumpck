@@ -34,11 +34,11 @@ class PackageStruct:
             t = configuration.thread_timeout
             code, err = pyc_checker.dump_pyc(file, file, t)
             if code:
-                print('[+] decompiler bytecode', file, len(code))
+                print('[+] decompile bytecode', file, len(code))
             else:
-                print('[!] fail to decompiler bytecode', file, err)
+                print('[!] fail to decompile bytecode', file, err)
         except Exception as e:
-            print('[!] Exception on decompiler bytecode', file, e)
+            print('[!] Exception on decompile bytecode', file, e)
 
     def callback_pyc_decompile(self, f: str):
         PackageStruct.decompile_pyc(f)
