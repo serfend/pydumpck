@@ -64,6 +64,7 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
             print('[!] decompile bytecode by pycdc fail', target_file)
         return result
     except Exception as e:
+        print('[!] decompile bytecode by pycdc fail', target_file)
         return (None, e)
 
 
