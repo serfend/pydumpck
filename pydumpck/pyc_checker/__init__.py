@@ -1,11 +1,12 @@
 from .. import configuration
 from .lib_uncompyle6 import Decompiler
 from . import extensions
-from .pyc import default_pyc,PycHandler
+from .pyc import default_pyc, PycHandler
 import os
 import subprocess
 pyimod00_crypto_key = 'pyimod00_crypto_key'
 package_dir = os.path.dirname(os.path.realpath(__file__))
+
 
 def remove_pycdc_banner(content: str):
     if not content:
@@ -90,7 +91,10 @@ def dump(data: bytes, target_file: str, structed_pyc_file: str, timeout: int = 1
         structed_pyc_file, target_file, timeout)
     # TODO log error info
     content = content_cdc or content_uncompyle6
-    return (content, err_cdc or err_uncompyle6)
+    err = err_cdc or err_uncompyle6
+    err = Exception(
+        err, f'fail when handling {target_file} -> {structed_pyc_file}') if isinstance(err, Exception) else err
+    return (content, err)
 
 
 def dump_pyc(pyc_file: str, target_file: str, timeout: int = 10, use_attach_header: bool = True):
