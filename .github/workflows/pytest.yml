@@ -4,9 +4,9 @@ name: Build & Test
 
 on:
   push:
-    branches: *
+    branches: '*'
   pull_request:
-    branches: *
+    branches: '*'
 
 jobs:
   build:
@@ -14,12 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['2.7', '3.7', '3.8', '3.9', '3.10', 'pypy2.7', 'pypy3.8']
-        exclude:
-          - os: macos-latest
-            python-version: '3.8'
-          - os: windows-latest
-            python-version: '3.6'
+        python-version: [ '3.7', '3.8', '3.9', '3.10']
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -39,4 +34,4 @@ jobs:
           # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test with pytest
         run: |
-          pipenv run pytest
+          pipenv run pytest -v --full-trace
