@@ -21,15 +21,17 @@ def test_commands_elf():
     sys.argv = [sys.argv[0]] + args
     pydumpck.pyinstaller_dump.run()
     output = f'{pydumpck.configuration.thread_output_directory}'
-    output = f'os.path.abspath(output){os.path.sep}'
+    output = os.path.abspath(output)
     print(f'test output:{output}')
     assert os.path.exists(output)
+    output = f'{output}{os.path.sep}'
     assert os.path.exists(f'{output}squid.pyc.py')
     assert os.path.exists(f'{output}squid.pyc.py.up6.py')
     extract_dir = 'PYZ-00.pyz_extract'
-    pyz_output = f'{output}{extract_dir}{os.path.sep}'
+    pyz_output = f'{output}{extract_dir}'
     print(f'test pyz_output:{pyz_output}')
     assert os.path.exists(pyz_output)
+    pyz_output = f'{pyz_output}{os.path.sep}'
     assert os.path.exists(f'{pyz_output}squid_game.pyc.py')
     assert os.path.exists(f'{pyz_output}squid_game.pyc.py.up6.py')
     shutil.rmtree(output)
