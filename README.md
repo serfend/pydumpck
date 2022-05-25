@@ -13,7 +13,7 @@
 
 # What?
 
-pydumpck is a multi-threads tool for decompile exe,elf,pyz,pyc packed by python which is base on `pycdc` and `undecompyle6`.sometimes its py-file result not exactly right ,maybe could use uncompyle6.
+pydumpck is a multi-threads tool for decompile exe,elf,pyz,pyc packed by python which is base on `pycdc` and `uncompyle6`.sometimes its py-file result not exactly right ,maybe could use uncompyle6.
 
 
 

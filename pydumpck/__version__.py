@@ -1,5 +1,5 @@
 __title__ = "pydumpck"
-__description__ = "pydumpck is a multi-threads tool for decompile exe,elf,pyz,pyc packed by python which is base on pycdc and undecompyle6.sometimes its py-file result not exactly right ,maybe could use uncompyle6."
+__description__ = "pydumpck is a multi-threads tool for decompile exe,elf,pyz,pyc packed by python which is base on pycdc and uncompyle6.sometimes its py-file result not exactly right ,maybe could use uncompyle6."
 __keywords__ = ['pydumpck', 'decomplier', 'pe', 'elf', 'pyc', 'pyz']
 __url__ = "https://github.com/serfend/pydumpck"
 __version__ = "1.4.46"

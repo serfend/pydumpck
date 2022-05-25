@@ -28,6 +28,6 @@ def test_pyc_decompiler_pycdc():
     return start_pyc_test()
 
 
-def test_pyc_decompiler_pydecompyle6():
+def test_pyc_decompiler_uncompyle6():
     pydumpck.configuration.plugin_decompiler_enable_uncompyle6 = True
     return start_pyc_test()

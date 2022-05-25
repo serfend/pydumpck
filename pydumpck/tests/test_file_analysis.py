@@ -23,7 +23,7 @@ def test_arch_file_pycdc(res_type_arch: Tuple):
     return start_arch_file(res_type_arch)
 
 
-def test_arch_file_decompyle6(res_type_arch: Tuple):
+def test_arch_file_uncompyle6(res_type_arch: Tuple):
     configuration.progress_session_timeout = 120
     configuration.plugin_decompiler_enable_uncompyle6 = True
     return start_arch_file(res_type_arch)
