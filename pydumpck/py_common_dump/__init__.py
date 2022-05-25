@@ -84,8 +84,8 @@ class CommonDump():
             zip(decompile_file, [True for x in decompile_file])) if decompile_file else None
 
         CommonDump.load_plugins(plugin)
-
-        print(f'[*] input:{target_file},to:{output_directory}')
+        
+        print(f'[*] home path is:{os.path.abspath(".")}\ninput:{target_file},to:{output_directory}')
 
         if os.path.exists(output_directory):
             print(f'[+] removing output_directory')
