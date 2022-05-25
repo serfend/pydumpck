@@ -1,5 +1,6 @@
 
 import os
+from random import Random
 import shutil
 import time
 from typing import List
@@ -78,6 +79,8 @@ class CommonDump():
     def main(self, target_file: str, output_directory: str, thread: int = 0, timeout: int = 10, target_file_type: str = None, session_timeout: int = 120, plugin: List = [], decompile_file: List = None, **args):
         configuration.thread_count = thread  # thread
         configuration.thread_timeout = timeout
+        if output_directory == 'output':
+            output_directory = f'{output_directory}_temp{Random().randint(int(1e6),int(1e7)-1)}'
         configuration.thread_output_directory = output_directory
         configuration.progress_session_timeout = session_timeout
         configuration.decompile_file = dict(
