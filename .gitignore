@@ -3,5 +3,5 @@
 build/*
 dist/*
 pydumpck.egg-info/*
-*.pyc
+*__pycache__*
 *output*

@@ -21,6 +21,7 @@ def start_pyc_test():
     assert len(content) > 20
     assert os.path.exists(target_file)
     os.remove(target_file)
+    os.remove(f'{target_file}.pyc')
 
 
 def test_pyc_decompiler_pycdc():
