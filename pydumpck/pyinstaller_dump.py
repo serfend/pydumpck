@@ -15,7 +15,7 @@ def run():
     parser.add_argument(
         '-o',
         '--ouput',
-        default='./output',
+        default='output',
         type=str,
         dest='output_directory',
         help='output archive file to (default: %(default)s).',
