@@ -4,6 +4,8 @@ from .common import res_type
 import pydumpck.configuration
 import sys
 import shutil
+
+
 def test_commands_elf():
     elf = res_type.get_res('elf')
     args = [
@@ -18,16 +20,16 @@ def test_commands_elf():
     ]
     sys.argv = [sys.argv[0]] + args
     pydumpck.pyinstaller_dump.run()
-    output = f'{pydumpck.configuration.thread_output_directory}{os.path.sep}'
-    print(f'output:{output}')
+    output = os.path.join(
+        elf[0], pydumpck.configuration.thread_output_directory)
+    print(f'test output:{output}')
     assert os.path.exists(output)
     assert os.path.exists(f'{output}squid.pyc.py')
     assert os.path.exists(f'{output}squid.pyc.py.up6.py')
     extract_dir = 'PYZ-00.pyz_extract'
     pyz_output = f'{output}{extract_dir}{os.path.sep}'
-    print(f'pyz_output:{pyz_output}')
+    print(f'test pyz_output:{pyz_output}')
     assert os.path.exists(pyz_output)
     assert os.path.exists(f'{pyz_output}squid_game.pyc.py')
     assert os.path.exists(f'{pyz_output}squid_game.pyc.py.up6.py')
     shutil.rmtree(output)
-
