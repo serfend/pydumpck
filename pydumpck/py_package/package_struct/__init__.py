@@ -35,9 +35,9 @@ class PackageStruct:
             if code:
                 print('[+] decompiler bytecode', file, len(code))
             else:
-                print('[!]fail to decompiler bytecode', file, err)
+                print('[!] fail to decompiler bytecode', file, err)
         except Exception as e:
-            print('[!]Exception on decompiler bytecode', file, e)
+            print('[!] Exception on decompiler bytecode', file, e)
 
     def callback_pyc_decompile(self, f: str):
         PackageStruct.decompile_pyc(f)
@@ -119,7 +119,7 @@ class PackageStruct:
                 self.struct_data = data[0:data.find(b'\xe3')]
                 pyc_checker.default_header = self.struct_data
                 print('[+] struct file found', self.struct_data)
-        elif package.name == 'pyimod00_crypto_key':
+        elif package.name == pyc_checker.pyimod00_crypto_key:
             self.encrypt_key_file = package.out_file
             print('[+] encrypt_file found', self.encrypt_key_file)
 
