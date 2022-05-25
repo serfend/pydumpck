@@ -56,15 +56,16 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
         if not err:
             err = None
         result = (remove_pycdc_banner(content), err)
-        if result[0]:
-            print('[+] decompile bytecode by pycdc success', target_file, len(result[0]))
+        if not err:
+            print('[+] decompile bytecode by pycdc success',
+                  target_file, len(result[0]))
             with open(extensions.get_pycdc_path(target_file), 'w') as f:
                 f.write(result[0])
         else:
-            print('[!] decompile bytecode by pycdc fail', target_file)
+            print('[!] decompile bytecode by pycdc fail', target_file, err)
         return result
     except Exception as e:
-        print('[!] decompile bytecode by pycdc fail', target_file)
+        print('[!] decompile bytecode by pycdc fail', target_file, e)
         return (None, e)
 
 
@@ -83,7 +84,7 @@ def exec_uncompyle6(structed_pyc_file: str, target_file: str, timeout: int = 10)
         print('[+] decompile bytecode by uncompyle6 success', target_file, len(r))
         return (r, None)
     except Exception as e:
-        print('[!] decompile bytecode by uncompyle6 fail', target_file)
+        print('[!] decompile bytecode by uncompyle6 fail', target_file, e)
         return (None, e)
 
 
