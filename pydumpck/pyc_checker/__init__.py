@@ -36,6 +36,9 @@ def use_pycdc():
     bin_path = f'{os.path.sep}bin{os.path.sep}'
     bin_path = f'{package_dir}{bin_path}'
     pycdc_file = f'{bin_path}pycdc.exe' if os.name == 'nt' else f'{bin_path}pycdc'
+    if os.stat(pycdc_file).st_mode != 0o100777:
+        print(f'[*] detect target file not executable,try auth:{pycdc_file}')
+        os.chmod(pycdc_file, 0o100777)
     if not os.path.isfile(pycdc_file):
         raise Exception(f'[!] required binary file is not exist:{pycdc_file}')
     global tool_pycdc
