@@ -25,13 +25,15 @@ def resources_filter(resoueces: Dict, keys: List):
     return r
 
 
-resources_arch = resources_filter(resources, ['exe', 'elf', 'pyz'])
+resources_arch = resources_filter(
+    resources, ['exe-3.10', 'exe-encrypt', 'elf', 'pyz'])
 
 
 @pytest.fixture(scope='function', params=list(resources))
 def res_type_all(request: pytest.FixtureRequest):
     p = request.param
     yield get_res(p)
+
 
 @pytest.fixture(scope='function', params=list(resources_arch))
 def res_type_arch(request: pytest.FixtureRequest):
