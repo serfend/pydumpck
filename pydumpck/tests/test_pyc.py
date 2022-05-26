@@ -33,7 +33,7 @@ def start_pyc_test():
 def test_pyc_decompiler_pycdc():
     pydumpck.configuration.plugin_decompiler_enable_pycdc = True
     path = start_pyc_test()
-    p1 = pydumpck.pyc_checker.extensions.get_uncompyle6_path(path)
+    p1 = pydumpck.pyc_checker.extensions.get_pycdc_path(path)
     assert os.path.exists(p1)
     os.remove(p1)
 

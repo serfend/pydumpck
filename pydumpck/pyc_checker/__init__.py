@@ -1,11 +1,9 @@
 from .. import configuration
-from .lib_uncompyle6 import Decompiler
-from . import extensions
+from . import extensions, lib_pycdc,lib_uncompyle6
 from .pyc import default_pyc, PycHandler
 import os
 import subprocess
 pyimod00_crypto_key = 'pyimod00_crypto_key'
-package_dir = os.path.dirname(os.path.realpath(__file__))
 
 
 def remove_pycdc_banner(content: str):
@@ -23,43 +21,21 @@ def remove_pyuncompyle6_banner(content: str):
     return content
 
 
-tool_uncompyle6: Decompiler = None
-tool_pycdc: str = None
-
-
-def use_uncompyle6():
-    global tool_uncompyle6
-    tool_uncompyle6 = Decompiler()
-
-
-def use_pycdc():
-    bin_path = f'{os.path.sep}bin{os.path.sep}'
-    bin_path = f'{package_dir}{bin_path}'
-    pycdc_file = f'{bin_path}pycdc.exe' if os.name == 'nt' else f'{bin_path}pycdc'
-    if os.stat(pycdc_file).st_mode != 0o100777:
-        print(f'[*] detect target file not executable,try auth:{pycdc_file}')
-        os.chmod(pycdc_file, 0o100777)
-    if not os.path.isfile(pycdc_file):
-        raise Exception(f'[!] required binary file is not exist:{pycdc_file}')
-    global tool_pycdc
-    tool_pycdc = pycdc_file
-
-
 def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
-    if not tool_pycdc:
+    if not lib_pycdc.tool_pycdc:
         if configuration.plugin_decompiler_enable_pycdc:
-            use_pycdc()
+            lib_pycdc.use_pycdc()
             return exec_pycdc(structed_pyc_file, target_file, timeout)
         return (None, '[*] pycdc not initilized')
     try:
-        p = subprocess.run([tool_pycdc, structed_pyc_file],
+        p = subprocess.run([lib_pycdc.tool_pycdc, structed_pyc_file],
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
         content = p.stdout.decode('utf-8')
         err = p.stderr.decode('utf-8')
         if not err:
             err = None
         result = (remove_pycdc_banner(content), err)
-        if not err:
+        if content:
             print('[+] decompile bytecode by pycdc success',
                   target_file, len(result[0]))
             with open(extensions.get_pycdc_path(target_file), 'w') as f:
@@ -73,14 +49,14 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
 
 
 def exec_uncompyle6(structed_pyc_file: str, target_file: str, timeout: int = 10):
-    if not tool_uncompyle6:
+    if not lib_uncompyle6.tool_uncompyle6:
         if configuration.plugin_decompiler_enable_uncompyle6:
-            use_uncompyle6()
+            lib_uncompyle6.use_uncompyle6()
             return exec_uncompyle6(structed_pyc_file, target_file, timeout)
         return (None, '[*] uncompyle6 not initilized')
     try:
         # TODO use asyncio,support timeout check
-        r = tool_uncompyle6.decompile_to_file(
+        r = lib_uncompyle6.tool_uncompyle6.decompile_to_file(
             pyc_file=structed_pyc_file,
             target_file=f'{target_file}.up6.py')
         r = remove_pyuncompyle6_banner(r)
@@ -109,7 +85,6 @@ def dump(data: bytes, target_file: str, structed_pyc_file: str, timeout: int = 1
 
 
 def dump_pyc(pyc_file: str, target_file: str, timeout: int = 10, use_attach_header: bool = True):
-    global tool_uncompyle6
     if use_attach_header:
         structed_pyc_file = extensions.get_structed_path(target_file)
         with open(pyc_file, 'rb') as f:

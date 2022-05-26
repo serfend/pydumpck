@@ -25,3 +25,11 @@ class Decompiler:
     def decompile_to_file(self, pyc_file: str, target_file: str) -> str:
         with open(target_file, 'w+') as f:
             return self.decompile(pyc_file, f)
+
+
+tool_uncompyle6: Decompiler = None
+
+
+def use_uncompyle6():
+    global tool_uncompyle6
+    tool_uncompyle6 = Decompiler()
