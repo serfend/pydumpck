@@ -2,8 +2,8 @@ import argparse
 from typing import List
 import pydumpck.__version__ as __version__
 from pydumpck.py_common_dump import CommonDump
-
 import pydumpck.utils.paths
+import time
 
 
 def run():
@@ -88,6 +88,9 @@ def run():
     if not args.show_version == False:
         print(__version__.__version__)
         return
+    print(parser.description)
+    print('-' * 20)
+    print(f'[+] pydumpck initilizing with {__version__.__version__}')
     try:
         dmp = CommonDump()
         return dmp.main(**vars(args))
