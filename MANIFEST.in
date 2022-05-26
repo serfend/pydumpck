@@ -1,1 +1,2 @@
-include pydumpck/pyc_checker/bin/*
+include pydumpck/pyc_checker/lib_pycdc/*
+include pydumpck/pyc_checker/lib_pycdc/src/*
