@@ -81,11 +81,9 @@ class CommonDump():
     def statistics_status(self, is_end: bool = False):
         if is_end:
             g = self.global_start_time
-            g = time.strftime(g)
             cost = time.time() - g
             cost = math.ceil(cost*1e3)
-            print(f'[+] completed,cost {cost}ms',
-                  f'start at {g}', f'with result:{self.result}')
+            print(f'[+] completed,cost {cost}ms', f'with result:{self.result}')
             return
         self.global_start_time = time.time()
 
