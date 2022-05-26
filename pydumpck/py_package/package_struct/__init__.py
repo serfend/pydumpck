@@ -124,7 +124,7 @@ class PackageStruct:
             data = package.dump_raw_file()
             if data:
                 self.struct_data = data[0:data.find(b'\xe3')]
-                pyc_checker.default_header = self.struct_data
+                pyc_checker.default_pyc.used_header = self.struct_data
                 print('[+] struct file found', self.struct_data)
         elif package.name == pyc_checker.pyimod00_crypto_key:
             self.encrypt_key_file = package.out_file
