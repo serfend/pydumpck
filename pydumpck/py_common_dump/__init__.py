@@ -60,17 +60,26 @@ class CommonDump():
         self.file_struct_pyc.progress_check()
         return f'{self.total_handled_count} arch file(s) handled.'
 
-    @staticmethod
-    def load_plugins(plugin):
+    def load_plugins(self, plugin):
+        self.any_invalid_plugin = False
+        p_prefix = 'plugin_decompiler_enable_'
+
         def filter_plugin(p):
-            n = f'plugin_decompiler_enable_{p}'
+            n = f'{p_prefix}{p}'
             if n not in configuration.__dict__:
+                self.any_invalid_plugin = True
                 print(f'[!] no plugin named {p}')
-                time.sleep(5)
                 return None
             return [p, n]
         plugin = [filter_plugin(x) for x in plugin]
         plugin_paths = [x[1] for x in plugin if x]
+        if self.any_invalid_plugin:
+            keys = list(configuration.__dict__)
+            all_valid_plugins = filter(lambda x: x.startswith(p_prefix), keys)
+            all_valid_plugins = [x.replace(p_prefix, '')
+                                 for x in all_valid_plugins]
+            print(f'[*] all valid plugins:{all_valid_plugins}')
+            time.sleep(5)
         print('[*] plugins loaded with', [x[0] for x in plugin if x])
         [setattr(configuration, x, True) for x in plugin_paths]
 
@@ -95,7 +104,7 @@ class CommonDump():
         configuration.progress_session_timeout = session_timeout
         configuration.decompile_file = dict(
             zip(decompile_file, [True for x in decompile_file])) if decompile_file else None
-        CommonDump.load_plugins(plugin)
+        self.load_plugins(plugin)
         os.chdir(os.path.dirname(target_file))
         print(f'[*] target file input:{target_file}\nto:{output_directory}')
 
