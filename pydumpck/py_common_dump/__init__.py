@@ -7,7 +7,7 @@ from typing import List
 from .. import configuration
 from ..py_package import PackageStruct, PackageDescription
 from PyInstaller.utils.cliutils.archive_viewer import get_archive, get_data, get_content, get_archive_content
-
+from ..utils.banner import print_banner
 
 class CommonDump():
 
@@ -98,6 +98,7 @@ class CommonDump():
 
     def main(self, target_file: str, output_directory: str, thread: int = 0, timeout: int = 10, target_file_type: str = None, session_timeout: int = 120, plugin: List = [], decompile_file: List = None, **args):
         self.statistics_status()
+        print_banner()
         configuration.thread_count = thread  # thread
         configuration.thread_timeout = timeout
         configuration.thread_output_directory = output_directory
