@@ -141,10 +141,11 @@ class CommonDump():
             os.makedirs(current_directory)
         children_package = arch.toc
         if isinstance(children_package, dict):
-            children_package = filter(
-                lambda x: not x.startswith('_'), list(children_package))
+            children_package = list(filter(
+                lambda x: not x.startswith('_'), list(children_package)))
         else:
             children_package = children_package.data
+        children_package = list(children_package)
         self.total_handled_count += len(children_package)
         for package in children_package:
             p = PackageDescription(package, arch, current_directory)
