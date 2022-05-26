@@ -6,7 +6,9 @@
     <a href="https://github.com/serfend/pydumpck/releases"><img alt="GitHub release" src="https://img.shields.io/github/release/serfend/pydumpck.svg?style=flat-square" /></a>
     <a href="https://github.com/serfend/pydumpck/releases"><img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/serfend/pydumpck/total.svg?style=flat-square&color=%2364ff82" /></a>
     <a href="https://github.com/serfend/pydumpck/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/serfend/pydumpck.svg?style=flat-square" /></a>
+    <a href="https://github.com/serfend/pydumpck/actions/workflows/pytest.yml"><img alt="GitHub Workflow Status" src="https://github.com/serfend/pydumpck/actions/workflows/pytest.yml/badge.svg" /></a>
 </p>
+
 
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)![Kali](https://img.shields.io/badge/Kali-268BEE?style=for-the-badge&logo=kalilinux&logoColor=white)![FreeBSD](https://img.shields.io/badge/-FreeBSD-%23870000?style=for-the-badge&logo=freebsd&logoColor=white)![Deepin](https://img.shields.io/badge/Deepin-007CFF?style=for-the-badge&logo=deepin&logoColor=white)![Debian](https://img.shields.io/badge/Debian-D70A53?style=for-the-badge&logo=debian&logoColor=white)![Cent OS](https://img.shields.io/badge/cent%20os-002260?style=for-the-badge&logo=centos&logoColor=F0F0F0)
