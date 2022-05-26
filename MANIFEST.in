@@ -1,2 +1,3 @@
+include requirements.txt
 include pydumpck/pyc_checker/lib_pycdc/*
 include pydumpck/pyc_checker/lib_pycdc/src/*

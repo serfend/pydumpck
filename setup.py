@@ -3,6 +3,7 @@
 import os
 import shutil
 import sys
+
 from setuptools import setup, find_packages
 pck_name = 'pydumpck'
 pck_dict = {}
@@ -33,7 +34,7 @@ def clear_dist():
 
 def load_requirements():
     if os.path.exists('requirements.txt'):
-        install_requires = open('requirements.txt').read().split('\n')
+        install_requires = open('requirements.txt').read().splitlines()
     else:
         install_requires = []
     return install_requires
@@ -47,6 +48,7 @@ entry_points = {
 
 about = load_about()
 install_requires = load_requirements()
+print('install_requires', install_requires)
 clear_dist()
 setup(
     name=about['__title__'],
