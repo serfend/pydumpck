@@ -38,8 +38,8 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
         if content:
             print('[+] decompile bytecode by pycdc success',
                   target_file, len(result[0]))
-            with open(extensions.get_pycdc_path(target_file), 'w') as f:
-                f.write(result[0])
+            with open(extensions.get_pycdc_path(target_file), 'wb') as f:
+                f.write(result[0].encode('utf-8'))
         else:
             print('[!] decompile bytecode by pycdc fail', target_file, err)
         return result
