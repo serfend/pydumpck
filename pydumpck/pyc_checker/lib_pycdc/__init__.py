@@ -4,18 +4,20 @@ import time
 package_dir = os.path.dirname(os.path.realpath(__file__))
 tool_pycdc: str = None
 
-
+def get_bin_path():
+    return f'{package_dir}{os.path.sep}pycdc'
 def use_pycdc():
-    bin_path = f'{package_dir}{os.path.sep}'
+    build_flag: bool = False
+    bin_path = get_bin_path()
     if os.name == 'nt':
-        pycdc_file = f'{bin_path}pycdc.exe'
+        pycdc_file = f'{bin_path}.exe'
     else:
-        pycdc_file = f'{bin_path}pycdc'
+        pycdc_file = bin_path
         if not os.path.exists(pycdc_file):
             print('[!] pycdc_file not exist , trying build it...')
             time.sleep(5)
             from . import build
-            build_file = f'{build.build()}{os.path.sep}pycdc'
+            build_file, build_flag = build.build()
             shutil.move(build_file, pycdc_file)
             build.clear()
 
@@ -26,3 +28,4 @@ def use_pycdc():
         raise Exception(f'[!] required binary file is not exist:{pycdc_file}')
     global tool_pycdc
     tool_pycdc = pycdc_file
+    return build_flag
