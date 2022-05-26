@@ -37,7 +37,7 @@ def test_pycdc_compile_multi_times():
     clear_previous_pycdc()
     from concurrent.futures import ThreadPoolExecutor
     thread_create_count = 10
-    timeout_length = 60  # 60 second
+    timeout_length = 120  # 120 second , for sometime run so slow
 
     threads = ThreadPoolExecutor(max_workers=thread_create_count)
     counter = [0, 0]
