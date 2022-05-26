@@ -1,6 +1,7 @@
 
 
 <p align="center">
+    <a href="https://github.com/serfend/pydumpck/"><img alt="pypi version" src="https://visitor-badge.glitch.me/badge?page_id=serfend/pydumpck&left_text=views" /></a> 
     <a href="https://pypi.python.org/pypi/pydumpck/"><img alt="pypi version" src="https://img.shields.io/pypi/v/pydumpck.svg" /></a> 
     <a href="https://pypistats.org/packages/pydumpck"><img alt="pypi download" src="https://img.shields.io/pypi/dm/pydumpck.svg" /></a>
     <a href="https://github.com/serfend/pydumpck/releases"><img alt="GitHub release" src="https://img.shields.io/github/release/serfend/pydumpck.svg?style=flat-square" /></a>
@@ -8,6 +9,7 @@
     <a href="https://github.com/serfend/pydumpck/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/serfend/pydumpck.svg?style=flat-square" /></a>
     <a href="https://github.com/serfend/pydumpck/actions/workflows/pytest.yml"><img alt="GitHub Workflow Status" src="https://github.com/serfend/pydumpck/actions/workflows/pytest.yml/badge.svg" /></a>
 </p>
+
 
 
 
