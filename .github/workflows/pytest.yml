@@ -34,7 +34,7 @@ jobs:
           pip install -r requirements.txt
       - name: Test with pytest
         run: |
-          pipenv run pytest -v --full-trace
+          pipenv run pytest -v --full-trace --durations=10
       - name: Devops Debug
         if: ${{ failure() }}
         run: |
