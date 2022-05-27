@@ -9,6 +9,7 @@ from ..py_package import PackageStruct, PackageDescription
 from PyInstaller.utils.cliutils.archive_viewer import get_archive, get_data, get_content, get_archive_content
 from ..utils.banner import print_banner
 
+
 class CommonDump():
 
     @property
@@ -106,6 +107,9 @@ class CommonDump():
         configuration.decompile_file = dict(
             zip(decompile_file, [True for x in decompile_file])) if decompile_file else None
         self.load_plugins(plugin)
+        if not target_file:
+            print('[!] target_file is required')
+            return
         os.chdir(os.path.dirname(target_file))
         print(f'[*] target file input:{target_file}\nto:{output_directory}')
 
