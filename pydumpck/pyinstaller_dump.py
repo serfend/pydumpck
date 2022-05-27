@@ -86,8 +86,9 @@ def run():
     )
     args = parser.parse_args()
     if not args.show_version == False:
-        print(__version__.__version__)
-        return
+        v = __version__.__version__
+        print(v)
+        return v
     print(parser.description)
     print('-' * 20)
     print(f'[+] pydumpck initilizing with {__version__.__version__}')
