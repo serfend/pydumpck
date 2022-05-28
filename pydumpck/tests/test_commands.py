@@ -1,6 +1,6 @@
 import os
 from typing import List
-import pydumpck.pyinstaller_dump
+from pydumpck.pyinstaller_dump import run 
 from .common import res_type
 import pydumpck.configuration
 import pydumpck.pyc_checker.extensions
@@ -46,17 +46,17 @@ def test_commands_elf():
         "squid_game"
     ]
     sys.argv = [sys.argv[0]] + args
-    pydumpck.pyinstaller_dump.run()
+    run()
     check_files(['squid'], ['squid_game'])
 
 
 def test_no_input():
     sys.argv = [sys.argv[0]]
-    pydumpck.pyinstaller_dump.run()
+    run()
 
 
 def test_version():
     sys.argv = [sys.argv[0], '-v']
-    result = pydumpck.pyinstaller_dump.run()
+    result = run()
     import pydumpck.__version__
     assert result == pydumpck.__version__.__version__
