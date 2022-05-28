@@ -49,7 +49,8 @@ def build() -> Tuple:
         g_lock.release()
         return build_cache, False
     export_file = f'{__build()}{os.path.sep}pycdc'
-    build_cache = os.path.join(get_self_path(), '.cache')
+    build_cache = os.path.join(get_self_path(), 'pycdc_cache')
+    print('try move file', export_file, build_cache)
     shutil.move(export_file, build_cache)
     g_lock.release()
     return build_cache, True
@@ -58,6 +59,7 @@ def build() -> Tuple:
 def clear():
     zip_file, src_path = get_src_path()
     shutil.rmtree(src_path)
+
 
 def remove_cache():
     global build_cache
