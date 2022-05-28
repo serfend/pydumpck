@@ -55,4 +55,5 @@ def test_pycdc_compile_multi_times():
         time.sleep(1)
     assert counter[1] > 0, f'no compile action is called.counter:{counter}'
     assert counter[1] == 1, f'more than one compiler is run.counter:{counter}'
-    assert counter[0] < 10, f'not all tasks completed in time.counter:{counter}'
+    assert counter[
+        0] >= thread_create_count, f'not all tasks completed in time.counter:{counter}'
