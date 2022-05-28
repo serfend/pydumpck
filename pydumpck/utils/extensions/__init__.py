@@ -23,3 +23,22 @@ def flat(arr: List, rank: int = 1) -> List:
     for i in arr:
         result += flat(i, rank-1)
     return result
+
+
+def distinct(arr: List, predict: Callable = None) -> List:
+    '''
+    distinct a array
+    arr     :   List[T]
+    predict :   Callable[T,str]
+    '''
+    if not predict:
+        def predict(x): return x
+    dic = {}
+    result = []
+    for i in arr:
+        k = predict(i)
+        if k in dic:
+            continue
+        dic[k] = True
+        result.append(i)
+    return result
