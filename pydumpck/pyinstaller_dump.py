@@ -65,7 +65,14 @@ def run():
         dest='decompile_file',
         help='only decompile referred file for quick complete (default: %(default)s).',
     )
-
+    parser.add_argument(
+        '--header',
+        nargs=argparse.ZERO_OR_MORE,
+        default=None,
+        dest='struct_headers',
+        help='specify pyc header hex-string (default: %(default)s).if not set , pydumpck will use struct.pyc\'s header(if possible) and default header.eg:6f0d0d0a 00000000 00000000 ffffffff',
+    )
+    
     parser.add_argument(
         '-v',
         '--version',
