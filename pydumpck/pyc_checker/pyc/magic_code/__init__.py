@@ -53,7 +53,7 @@ def get_version(major: int = 3, minor: int = 0, build: int = None, timestamp: in
     header = bytearray()
     header += (struct.pack('<H', result[1]) + b'\r\n')
     if minor > 7:
-        header += struct.pack('<I', 857944867) # 23332333 unused mark
+        header += struct.pack('<I', 857944867)  # 23332333 unused mark
     # load datetime on now
     header += struct.pack('<I', int(timestamp))
     if minor > 3:
@@ -65,5 +65,5 @@ def get_version(major: int = 3, minor: int = 0, build: int = None, timestamp: in
 version_count = len(_versions)
 versions = [get_version(minor=(version_count-x)) for x in range(version_count)]
 version_latest = versions[0]
-version_py0304 = find(versions, lambda index, i: i[0][1] == 0x04)
+version_py0304 = find(versions, lambda i, index: i[0][1] == 0x04)
 pass
