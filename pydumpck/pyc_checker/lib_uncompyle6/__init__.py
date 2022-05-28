@@ -2,6 +2,11 @@ try:
     from io import StringIO
 except ImportError:
     from StringIO import StringIO
+from uncompyle6.parser import PythonParser, ParserError
+
+
+def direct_error(self, instructions, index):
+    raise ParserError(None, -1, self.debug['reduce'])
 
 
 class Decompiler:
@@ -9,6 +14,7 @@ class Decompiler:
         from .requirement_check import check_version
         check_version()
         from uncompyle6.main import decompile_file
+        PythonParser.error = direct_error
         self.decompile_file = decompile_file
 
     def decompile(self, pyc_file: str, out_stream: StringIO = None) -> str:
