@@ -27,5 +27,3 @@ class PycHeader():
         return pos, data[pos:]
 
 
-with open('310.pyc', 'rb') as f:
-    PycHeader.from_file(f)
