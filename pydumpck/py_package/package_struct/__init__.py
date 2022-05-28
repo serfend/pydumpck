@@ -24,7 +24,8 @@ class PackageStruct:
         self.encrypt_key_data = None
         self.encrypt_key_file = None
 
-        self.thread_count = configuration.thread_count or multiprocessing.cpu_count()
+        self.thread_count = configuration.thread_count or (
+            multiprocessing.cpu_count() * 8)
         self.pool = ThreadPoolExecutor(max_workers=self.thread_count)
 
     @staticmethod

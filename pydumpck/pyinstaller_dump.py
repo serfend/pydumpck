@@ -28,7 +28,7 @@ def run():
         default=0,
         type=int,
         dest='thread',
-        help='thread count for running (default: %(default)s) cpu-count * 2.',
+        help='thread count for running (default: %(default)s) cpu-count * 8.',
     )
 
     parser.add_argument(
