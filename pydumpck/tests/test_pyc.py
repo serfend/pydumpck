@@ -12,7 +12,7 @@ import pydumpck.utils.paths
 def start_pyc_test():
     _ = pydumpck.py_common_dump.CommonDump().file_struct_pyc  # start dump global
     pydumpck.configuration.decompile_file = None
-    pyc_path, t = res_type.get_res('pyc')
+    pyc_path, t, _ = res_type.get_res('pyc')
     output_path = os.path.join(os.path.dirname(pyc_path), 'output')
     output_path = pydumpck.utils.paths.get_random_path(output_path)
     output_path = os.path.join(output_path, 'result')
