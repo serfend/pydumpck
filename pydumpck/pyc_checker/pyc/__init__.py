@@ -19,20 +19,16 @@ class PycHandler():
         '''
         pos, new_data = self.get_e3(data)
         fp: io.BytesIO = io.BytesIO(new_data)
-        version_mode = [
-            (4, magic_code.version_latest),
-            (3, magic_code.version_py0304),
-        ]
+        version_mode = magic_code.versions
         success_version_mode: Tuple = None
         for i in version_mode:
             try:
                 code_obj = {}
                 code = xdis.unmarshal._VersionIndependentUnmarshaller(
                     fp=fp,
-                    magic_int=i[1][1],
-                    bytes_for_s=False,
+                    magic_int=i[1],
+                    bytes_for_s=True,
                     code_objects=code_obj)
-                code.marshal_version = i[0]
                 result = code.load()
                 success_version_mode = i
                 break
@@ -40,7 +36,7 @@ class PycHandler():
                 pass
             fp.seek(0)
         if success_version_mode:
-            v, magic, demo_header = success_version_mode[1]
+            v, magic, demo_header = success_version_mode
             return bytes(demo_header)
         return None
 
