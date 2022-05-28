@@ -1,9 +1,6 @@
 from argparse import ArgumentError
 from typing import Callable, List
 
-from sympy import E
-
-
 def find(arr: List, predict: Callable):
     c_count = predict.__code__.co_argcount
     if c_count == 1:
