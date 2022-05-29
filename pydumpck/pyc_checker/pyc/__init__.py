@@ -37,6 +37,7 @@ class PycHandler():
             fp.seek(0)
         if success_version_mode:
             v, magic, demo_header = success_version_mode
+            print(f'[+] find suitable python-version:{v},magic:{magic}')
             return bytes(demo_header)
         return None
 
