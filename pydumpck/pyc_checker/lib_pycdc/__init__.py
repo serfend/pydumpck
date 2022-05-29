@@ -4,8 +4,11 @@ import time
 package_dir = os.path.dirname(os.path.realpath(__file__))
 tool_pycdc: str = None
 
+
 def get_bin_path():
     return f'{package_dir}{os.path.sep}pycdc'
+
+
 def use_pycdc():
     build_flag: bool = False
     bin_path = get_bin_path()
@@ -17,9 +20,9 @@ def use_pycdc():
             print('[!] pycdc_file not exist , trying build it...')
             time.sleep(5)
             from . import build
-            build_file, build_flag = build.build()
-            shutil.move(build_file, pycdc_file)
-            build.clear()
+            build_file, build_flag = build.build(pycdc_file)
+            print('get compile file path', build_file, build_flag)
+                
 
     if os.stat(pycdc_file).st_mode != 0o100777:
         print(f'[*] detect pycdc_file not executable,try auth:{pycdc_file}')

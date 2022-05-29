@@ -36,7 +36,7 @@ def __build():
     return src_path
 
 
-def build() -> Tuple:
+def build(move_to:str = None) -> Tuple:
     '''
     compile binary and return path
         path:str binary
@@ -49,16 +49,22 @@ def build() -> Tuple:
         g_lock.release()
         return build_cache, False
     export_file = f'{__build()}{os.path.sep}pycdc'
-    build_cache = os.path.join(get_self_path(), 'pycdc_cache')
-    print('try move file', export_file, build_cache)
+    if move_to:
+        build_cache = move_to
+    else:
+        build_cache = os.path.join(get_self_path(), 'pycdc_cache')
+    print('moving pycdc file', export_file, build_cache)
     shutil.move(export_file, build_cache)
+    build.clear()
+    os.chmod(build_cache, 0o100777)
     g_lock.release()
     return build_cache, True
 
 
 def clear():
     zip_file, src_path = get_src_path()
-    shutil.rmtree(src_path)
+    if os.path.exists(src_path):
+        shutil.rmtree(src_path)
 
 
 def remove_cache():
