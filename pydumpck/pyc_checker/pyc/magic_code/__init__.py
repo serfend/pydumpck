@@ -2,6 +2,7 @@
 
 
 # use latest magic number of python release
+from argparse import ArgumentError
 from datetime import datetime
 import struct
 from ....utils.extensions import find
@@ -35,7 +36,17 @@ _versions = [
 ]
 
 
-def get_version(major: int = 3, minor: int = 0, build: int = None, timestamp: int = None):
+def get_timestamp(timestamp: datetime):
+    if isinstance(timestamp, datetime):
+        time_int = timestamp.timestamp()
+    elif isinstance(timestamp, int):
+        time_int = timestamp
+    else:
+        raise ArgumentError(message='invalid type of time')
+    return struct.pack('<I', int(time_int))
+
+
+def get_version(major: int = 3, minor: int = 0, build: int = None, timestamp: datetime = None):
     '''
     return 
         [
@@ -45,7 +56,7 @@ def get_version(major: int = 3, minor: int = 0, build: int = None, timestamp: in
         ]
     '''
     if timestamp == None:
-        timestamp = datetime.now().timestamp()
+        timestamp = datetime.now()
 
     l = len(_versions)
     result = _versions[l-minor]
@@ -55,7 +66,7 @@ def get_version(major: int = 3, minor: int = 0, build: int = None, timestamp: in
     if minor > 7:
         header += struct.pack('<I', 857944867)  # 23332333 unused mark
     # load datetime on now
-    header += struct.pack('<I', int(timestamp))
+    header += get_timestamp(timestamp)
     if minor > 3:
         header += (b'\xe9'*4)
 
