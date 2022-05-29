@@ -12,7 +12,7 @@ import pydumpck.utils.paths
 def start_pyc_test():
     _ = pydumpck.py_common_dump.CommonDump().file_struct_pyc  # start dump global
     pydumpck.configuration.decompile_file = None
-    pyc_path, t = res_type.get_res('pyc')
+    pyc_path, t, _ = res_type.get_res('pyc')
     output_path = os.path.join(os.path.dirname(pyc_path), 'output')
     output_path = pydumpck.utils.paths.get_random_path(output_path)
     output_path = os.path.join(output_path, 'result')
@@ -35,7 +35,7 @@ def test_pyc_decompiler_pycdc():
     path = start_pyc_test()
     p1 = pydumpck.pyc_checker.extensions.get_pycdc_path(path)
     assert os.path.exists(p1)
-    os.remove(p1)
+    shutil.rmtree(os.path.dirname(p1))
 
 
 def test_pyc_decompiler_uncompyle6():
@@ -43,4 +43,4 @@ def test_pyc_decompiler_uncompyle6():
     path = start_pyc_test()
     p1 = pydumpck.pyc_checker.extensions.get_uncompyle6_path(path)
     assert os.path.exists(p1)
-    os.remove(p1)
+    shutil.rmtree(os.path.dirname(p1))

@@ -24,7 +24,8 @@ class PackageStruct:
         self.encrypt_key_data = None
         self.encrypt_key_file = None
 
-        self.thread_count = configuration.thread_count or multiprocessing.cpu_count()
+        self.thread_count = configuration.thread_count or (
+            multiprocessing.cpu_count() * 8)
         self.pool = ThreadPoolExecutor(max_workers=self.thread_count)
 
     @staticmethod
@@ -51,8 +52,12 @@ class PackageStruct:
         self.handle_count = 0
         if self.total_count == 0:
             return
-        [self.pool.submit(self.callback_pyc_decompile, f) for f in files]
-        return self.progress_waitter('decompile source file')
+        if configuration.DEBUG_TestPycDump:
+            for f in files:
+                self.callback_pyc_decompile(f)
+        else:
+            [self.pool.submit(self.callback_pyc_decompile, f) for f in files]
+            return self.progress_waitter('decompile source file')
 
     def progress_waitter(self, description: str):
         start_time = time.time()
@@ -124,7 +129,7 @@ class PackageStruct:
             data = package.dump_raw_file()
             if data:
                 self.struct_data = data[0:data.find(b'\xe3')]
-                pyc_checker.default_pyc.used_header = self.struct_data
+                pyc_checker.default_pyc.file_header = self.struct_data
                 print('[+] struct file found', self.struct_data)
         elif package.name == pyc_checker.pyimod00_crypto_key:
             self.encrypt_key_file = package.out_file

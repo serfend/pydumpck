@@ -1,5 +1,5 @@
 from .. import configuration
-from . import extensions, lib_pycdc,lib_uncompyle6
+from . import extensions, lib_pycdc, lib_uncompyle6
 from .pyc import default_pyc, PycHandler
 import os
 import subprocess

@@ -8,12 +8,14 @@ def get_res(t: str):
     if isinstance(res, str):
         file_path = res
         target_type = t
+        deompile_files = None
     elif isinstance(res, Tuple):
         file_path = res[0]
         target_type = res[1]
+        deompile_files = res[2] if len(res) > 2 else None
     else:
         assert 'invalid resources' == t, f'resouece invalid'
-    return (file_path, target_type)
+    return (file_path, target_type, deompile_files)
 
 
 def resources_filter(resoueces: Dict, keys: List):

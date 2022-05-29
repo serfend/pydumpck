@@ -47,7 +47,7 @@ options:
   -o OUTPUT_DIRECTORY, --ouput OUTPUT_DIRECTORY
                         output archive file to (default: ./output).
   -w THREAD, --thread THREAD
-                        thread count for running (default: 0) cpu-count * 2.
+                        thread count for running (default: 0) cpu-count * 8.
   -t TIMEOUT, --timeout TIMEOUT
                         timeout running single decompiler (default: 10).
   --session-timeout TIMEOUT_SESSION

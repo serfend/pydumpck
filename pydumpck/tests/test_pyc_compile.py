@@ -14,13 +14,21 @@ def handle_single(counter: List):
     counter[0] += 1
 
 
-def clear_previous_pycdc():
+def check_bin_exist():
     bin_path = pydumpck.pyc_checker.lib_pycdc.get_bin_path()
+    exist = os.path.exists(bin_path)
+    return bin_path, exist
+
+
+def clear_previous_pycdc():
+    bin_path, exist = check_bin_exist()
     pydumpck.pyc_checker.lib_pycdc.build.remove_cache()
-    if os.path.exists(bin_path):
+    if exist:
         print(f'pycdc exists:{bin_path},remove it.')
         os.remove(bin_path)
     pydumpck.pyc_checker.lib_pycdc.build.remove_cache()
+    _, exist = check_bin_exist()
+    assert exist == False
 
 
 @pytest.mark.skipif(os.name == 'nt', reason='windows doesn\'t need compile')
@@ -30,6 +38,8 @@ def test_pycdc_compile_single_time():
     assert is_build == True, 'first time should run compile'
     is_build = pydumpck.pyc_checker.lib_pycdc.use_pycdc()
     assert is_build == False, 'second time should be use cache'
+    _, exist = check_bin_exist()
+    assert exist, True
 
 
 @pytest.mark.skipif(os.name == 'nt', reason='windows doesn\'t need compile')
@@ -55,4 +65,7 @@ def test_pycdc_compile_multi_times():
         time.sleep(1)
     assert counter[1] > 0, f'no compile action is called.counter:{counter}'
     assert counter[1] == 1, f'more than one compiler is run.counter:{counter}'
-    assert counter[0] < 10, f'not all tasks completed in time.counter:{counter}'
+    assert counter[
+        0] >= thread_create_count, f'not all tasks completed in time.counter:{counter}'
+    _, exist = check_bin_exist()
+    assert exist, True
