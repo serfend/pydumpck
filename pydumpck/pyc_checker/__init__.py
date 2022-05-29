@@ -21,6 +21,24 @@ def remove_pyuncompyle6_banner(content: str):
     return content
 
 
+def split_warning_error(content: str):
+    lines = content.split('\n')
+    other_error = []
+    warning_error = []
+    for i in lines:
+        if i.startswith('Warning'):
+            warning_error.append(i)
+        else:
+            other_error.append(i)
+    err_other = '\n'.join(other_error)
+    if not err_other:
+        err_other = None
+    err_warning = '\n'.join(warning_error)
+    if not err_warning:
+        err_warning = None
+    return err_other, err_warning
+
+
 def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
     if not lib_pycdc.tool_pycdc:
         if configuration.plugin_decompiler_enable_pycdc:
@@ -31,7 +49,9 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
         p = subprocess.run([lib_pycdc.tool_pycdc, structed_pyc_file],
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
         content = p.stdout.decode('utf-8')
-        err = p.stderr.decode('utf-8')
+        err, warning = split_warning_error(p.stderr.decode('utf-8'))
+        if warning:
+            print(f'[!] warning:\n{warning}\non exec_pycdc:{structed_pyc_file}')
         if not err:
             err = None
         result = (remove_pycdc_banner(content), err)
