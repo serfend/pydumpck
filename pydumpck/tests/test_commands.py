@@ -1,12 +1,14 @@
 import os
 from typing import List
-from pydumpck.pyinstaller_dump import run 
+from pydumpck.pyinstaller_dump import run
 from .common import res_type
 import pydumpck.configuration
 import pydumpck.pyc_checker.extensions
 import sys
 import shutil
-
+def start_run():
+    print('params', sys.argv)
+    return run()
 
 def check_uncompile_files(target_file: str):
     assert os.path.exists(pydumpck.pyc_checker.extensions.get_pycdc_path(
@@ -46,17 +48,17 @@ def test_commands_elf():
         "squid_game"
     ]
     sys.argv = [sys.argv[0]] + args
-    run()
+    start_run()
     check_files(['squid'], ['squid_game'])
 
 
 def test_no_input():
     sys.argv = [sys.argv[0]]
-    run()
+    start_run()
 
 
 def test_version():
     sys.argv = [sys.argv[0], '-v']
-    result = run()
+    result = start_run()
     import pydumpck.__version__
     assert result == pydumpck.__version__.__version__
