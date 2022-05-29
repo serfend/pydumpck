@@ -9,7 +9,7 @@ def find(arr: List, predict: Callable) -> any:
     elif c_count == 2:
         x_predict = predict
     else:
-        raise ArgumentError(f'invalid param count {c_count}')
+        raise ArgumentError(message = f'invalid param count {c_count}')
     for index, i in enumerate(arr):
         if x_predict(i, index):
             return i
