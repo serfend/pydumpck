@@ -33,11 +33,12 @@ pip install pydumpck
 
 ```shell
 usage: pydumpck [-h] [-o OUTPUT_DIRECTORY] [-w THREAD] [-t TIMEOUT] [--session-timeout TIMEOUT_SESSION]
-                [-y TARGET_FILE_TYPE] [-d [DECOMPILE_FILE ...]] [-v [SHOW_VERSION]] [-p [PLUGIN ...]]
+                [-y TARGET_FILE_TYPE] [-d [DECOMPILE_FILE ...]] [--header [STRUCT_HEADERS ...]] [-v [SHOW_VERSION]]
+                [-p [PLUGIN ...]]
                 [target_file]
 
-pydumpck is a tool for decompile exe,elf,pyz,pyc packed by python which is base on pycdc.sometimes its py-file result
-not exactly right ,maybe could use uncompyle6 etc.
+pydumpck is a multi-threads tool for decompile exe,elf,pyz,pyc packed by python which is base on pycdc and
+uncompyle6.sometimes its py-file result not exactly right ,maybe could use uncompyle6.
 
 positional arguments:
   target_file           file to extract or decompiler,combine with -y for type select.
@@ -45,7 +46,7 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -o OUTPUT_DIRECTORY, --ouput OUTPUT_DIRECTORY
-                        output archive file to (default: ./output).
+                        output archive file to (default: output_2938294).
   -w THREAD, --thread THREAD
                         thread count for running (default: 0) cpu-count * 8.
   -t TIMEOUT, --timeout TIMEOUT
@@ -56,6 +57,9 @@ options:
                         file-type of input file,can use pe,exe,elf,pyc,pyz (default: None : auto guess).
   -d [DECOMPILE_FILE ...], --decompile_file [DECOMPILE_FILE ...]
                         only decompile referred file for quick complete (default: None).
+  --header [STRUCT_HEADERS ...]
+                        specify pyc header hex-string (default: None).if not set , pydumpck will use struct.pyc's
+                        header(if possible) and default header.eg:6f0d0d0a 00000000 00000000 ffffffff
   -v [SHOW_VERSION], --version [SHOW_VERSION]
                         show version of package
   -p [PLUGIN ...], --plugin [PLUGIN ...]
@@ -92,6 +96,15 @@ pydumpck xxx.exe --output ./output --thread 8 --timeout 10
 `pydumpck xxx.exe -d main` for only target `main.py`
 
 `pydumpck xxx.exe -d main lib_base64 secert` for targets `main.py` and `lib_base64.py` and `secert.py`
+
+
+
+## Demo
+
+- pyc with header been tampered with
+  - (Warning:gif with size 5MB)![pyc-fix_header-demo](https://raw.githubusercontent.com/serfend/res.image.reference/main/pyc-fix_header-demo.gif)
+
+
 
 ## Notice
 
