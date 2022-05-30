@@ -113,3 +113,9 @@ pydumpck xxx.exe --output ./output --thread 8 --timeout 10
 > however `pycdc` sometimes return a not precisely right result.
 >
 > in pydumpck , you can use `--plugin uncompyle6` for single-use or `--plugin pycdc uncompyle6` for both-use.
+
+
+
+## Status
+
+![Alt](https://repobeats.axiom.co/api/embed/013759c6315338178a2643de0bca01826fb39a14.svg "Repobeats analytics image")
