@@ -53,8 +53,8 @@ def _handle_file(f: BufferedReader, dirName: str, cipper_key: bytes):
     try:
         toc = marshal.load(f)
     except:
-        print(
-            '[!] Unmarshalling FAILED. Cannot extract {0}. Extracting remaining files.'.format(dirName))
+        logger.warning(
+            'Unmarshalling FAILED. Cannot extract {0}. Extracting remaining files.'.format(dirName))
         return
 
     logger.info('Found {0} files in PYZ archive'.format(len(toc)))

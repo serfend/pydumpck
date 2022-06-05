@@ -1,3 +1,4 @@
+from ... import logger
 def check(v_expected: str, v_current: str) -> bool:
     def get_ver_value(v):
         v = [int(x) for x in v.split('.')]
@@ -11,8 +12,8 @@ def check_version():
     v_current = xdis.version.__version__
 
     if not check(v_expected, v_current):
-        print(
-            f'[!] require xdis version greater than {v_expected},current is {v_current}')
+        logger.warning(
+            f'require xdis version greater than {v_expected},current is {v_current}')
         if input('install package online? yes(*)/no(n)') == 'n':
             import sys
             sys.exit(-1)

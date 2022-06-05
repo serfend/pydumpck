@@ -26,10 +26,10 @@ def use_pycdc():
                 
 
     if os.stat(pycdc_file).st_mode != 0o100777:
-        print(f'[*] detect pycdc_file not executable,try auth:{pycdc_file}')
+        logger.debug(f'detect pycdc_file not executable,try auth:{pycdc_file}')
         os.chmod(pycdc_file, 0o100777)
     if not os.path.isfile(pycdc_file):
-        raise Exception(f'[!] required binary file is not exist:{pycdc_file}')
+        raise Exception(f'required binary file is not exist:{pycdc_file}')
     global tool_pycdc
     tool_pycdc = pycdc_file
     return build_flag

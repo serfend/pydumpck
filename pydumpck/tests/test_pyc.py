@@ -1,5 +1,6 @@
 import shutil
 import os
+from .. import logger
 from .common import res_type
 import pydumpck.pyc_checker
 import pydumpck.pyc_checker.extensions
@@ -18,8 +19,8 @@ def start_pyc_test():
     output_path = os.path.join(output_path, 'result')
     content, err = pydumpck.pyc_checker.dump_pyc(
         pyc_file=pyc_path, target_file=output_path)
-    is_notice = err and not isinstance(err, Exception) and err[0:3] == '[*]'
-    print(f'complete with result err:{err},content:{content}')
+    is_notice = err and not isinstance(err, Exception)
+    logger.debug(f'complete with result err:{err},content:{content}')
     assert err == None or is_notice
     assert content != None
     assert isinstance(content, str)

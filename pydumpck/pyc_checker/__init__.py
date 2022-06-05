@@ -44,15 +44,15 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
         if configuration.plugin_decompiler_enable_pycdc:
             lib_pycdc.use_pycdc()
             return exec_pycdc(structed_pyc_file, target_file, timeout)
-        return (None, '[*] pycdc not initilized')
+        return (None, 'pycdc not initilized')
     try:
         p = subprocess.run([lib_pycdc.tool_pycdc, structed_pyc_file],
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
         content = p.stdout.decode('utf-8')
         err, warning = split_warning_error(p.stderr.decode('utf-8'))
         if warning:
-            print(
-                f'[!] warning:\n{warning}\non exec_pycdc:{structed_pyc_file}')
+            logger.warning(
+                f'\n{warning}\non exec_pycdc:{structed_pyc_file}')
         if not err:
             err = None
         result = (remove_pycdc_banner(content), err)
@@ -62,10 +62,12 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
             with open(extensions.get_pycdc_path(target_file), 'wb') as f:
                 f.write(result[0].encode('utf-8'))
         else:
-            logger.warning(f'decompile bytecode by pycdc fail,file:{target_file},with error:{e}')
+            logger.warning(
+                f'decompile bytecode by pycdc fail,file:{target_file},with error:{e}')
         return result
     except Exception as e:
-        logger.warning(f'decompile bytecode by pycdc fail,file:{target_file},with error:{e}')
+        logger.warning(
+            f'decompile bytecode by pycdc fail,file:{target_file},with error:{e}')
         return (None, e)
 
 
@@ -74,7 +76,7 @@ def exec_uncompyle6(structed_pyc_file: str, target_file: str, timeout: int = 10)
         if configuration.plugin_decompiler_enable_uncompyle6:
             lib_uncompyle6.use_uncompyle6()
             return exec_uncompyle6(structed_pyc_file, target_file, timeout)
-        return (None, '[*] uncompyle6 not initilized')
+        return (None, 'uncompyle6 not initilized')
     try:
         # TODO use asyncio,support timeout check
         r = lib_uncompyle6.tool_uncompyle6.decompile_to_file(
@@ -95,7 +97,7 @@ def dump(data: bytes, target_file: str, structed_pyc_file: str, timeout: int = 1
         same, data = default_pyc.attach_pyc_struct(data, structed_pyc_file)
     filename = extensions.get_filename(structed_pyc_file)
     if configuration.decompile_file != None and filename not in configuration.decompile_file and pyimod00_crypto_key != filename:
-        return (None, f'[*] not in decompile files:{filename}')
+        return (None, f'not in decompile files:{filename}')
     content_cdc, err_cdc = exec_pycdc(structed_pyc_file, target_file, timeout)
     content_uncompyle6, err_uncompyle6 = exec_uncompyle6(
         structed_pyc_file, target_file, timeout)

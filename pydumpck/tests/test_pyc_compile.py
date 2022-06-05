@@ -1,4 +1,5 @@
 import math
+from .. import logger
 from typing import List
 import time
 import pydumpck.pyc_checker.lib_pycdc
@@ -24,7 +25,7 @@ def clear_previous_pycdc():
     bin_path, exist = check_bin_exist()
     pydumpck.pyc_checker.lib_pycdc.build.remove_cache()
     if exist:
-        print(f'pycdc exists:{bin_path},remove it.')
+        logger.debug(f'pycdc exists:{bin_path},remove it.')
         os.remove(bin_path)
     pydumpck.pyc_checker.lib_pycdc.build.remove_cache()
     _, exist = check_bin_exist()
@@ -61,7 +62,7 @@ def test_pycdc_compile_multi_times():
             break
         if counter[0] >= thread_create_count:
             break
-        print(f'waiting compiling...{c}')
+        logger.debug(f'waiting compiling...{c}')
         time.sleep(1)
     assert counter[1] > 0, f'no compile action is called.counter:{counter}'
     assert counter[1] == 1, f'more than one compiler is run.counter:{counter}'

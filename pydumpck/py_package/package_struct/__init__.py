@@ -38,10 +38,10 @@ class PackageStruct:
                 logger.info(
                     f'decompile bytecode on file:{file},length:{len(code)}')
             else:
-                logger.error(
+                logger.warning(
                     f'fail to decompile bytecode on file:{file},with error:{err}')
         except Exception as e:
-            logger.error(
+            logger.warning(
                 f'Exception on decompile bytecode file:{file},with error:{err}')
 
     def callback_pyc_decompile(self, f: str):

@@ -21,14 +21,14 @@ def check_uncompile_files(target_file: str):
 def check_files(specify_files_outer: List, specify_files_inner: List):
     output = f'{pydumpck.configuration.thread_output_directory}'
     output = os.path.abspath(output)
-    print(f'test output:{output}')
+    logger.debug(f'test output:{output}')
     assert os.path.exists(output)
     output = f'{output}{os.path.sep}'
     for i in specify_files_outer:
         check_uncompile_files(f'{output}{i}.pyc')
     extract_dir = 'PYZ-00.pyz_extract'
     pyz_output = f'{output}{extract_dir}'
-    print(f'test pyz_output:{pyz_output}')
+    logger.debug(f'test pyz_output:{pyz_output}')
     assert os.path.exists(pyz_output)
     pyz_output = f'{pyz_output}{os.path.sep}'
     for i in specify_files_inner:
