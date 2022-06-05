@@ -1,4 +1,4 @@
-from .. import configuration
+from .. import configuration, logger
 from . import extensions, lib_pycdc, lib_uncompyle6
 from .pyc import default_pyc, PycHandler
 import os
@@ -51,20 +51,21 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
         content = p.stdout.decode('utf-8')
         err, warning = split_warning_error(p.stderr.decode('utf-8'))
         if warning:
-            print(f'[!] warning:\n{warning}\non exec_pycdc:{structed_pyc_file}')
+            print(
+                f'[!] warning:\n{warning}\non exec_pycdc:{structed_pyc_file}')
         if not err:
             err = None
         result = (remove_pycdc_banner(content), err)
         if content:
-            print('[+] decompile bytecode by pycdc success',
-                  target_file, len(result[0]))
+            logger.info(
+                f'decompile bytecode by pycdc success on file:{target_file},length:{len(result[0])}')
             with open(extensions.get_pycdc_path(target_file), 'wb') as f:
                 f.write(result[0].encode('utf-8'))
         else:
-            print('[!] decompile bytecode by pycdc fail', target_file, err)
+            logger.warning(f'decompile bytecode by pycdc fail,file:{target_file},with error:{e}')
         return result
     except Exception as e:
-        print('[!] decompile bytecode by pycdc fail', target_file, e)
+        logger.warning(f'decompile bytecode by pycdc fail,file:{target_file},with error:{e}')
         return (None, e)
 
 
@@ -80,10 +81,12 @@ def exec_uncompyle6(structed_pyc_file: str, target_file: str, timeout: int = 10)
             pyc_file=structed_pyc_file,
             target_file=f'{target_file}.up6.py')
         r = remove_pyuncompyle6_banner(r)
-        print('[+] decompile bytecode by uncompyle6 success', target_file, len(r))
+        logger.info(
+            f'decompile bytecode by uncompyle6 success file:{target_file},length:{len(r)}')
         return (r, None)
     except Exception as e:
-        print('[!] decompile bytecode by uncompyle6 fail', target_file, e)
+        logger.error(
+            f'decompile bytecode by uncompyle6 fail file:{target_file} ,with error :{e}')
         return (None, e)
 
 

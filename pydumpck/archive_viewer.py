@@ -1,4 +1,4 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2013-2022, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License (version 2
@@ -7,11 +7,12 @@
 # The full license is in the file COPYING.txt, distributed with this software.
 #
 # SPDX-License-Identifier: (GPL-2.0-or-later WITH Bootloader-exception)
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 """
 Viewer for archives packaged by archive.py.
 """
 
+from . import logger
 import argparse
 import os
 import pprint
@@ -31,7 +32,7 @@ def main(name, brief, debug, rec_debug, **unused_options):
     global stack
 
     if not os.path.isfile(name):
-        print(name, "is an invalid file name!", file=sys.stderr)
+        logger.error(f'[{name}] is an invalid file name!')
         return 1
 
     arch = get_archive(name)
@@ -46,8 +47,6 @@ def main(name, brief, debug, rec_debug, **unused_options):
         try:
             toks = stdin_input('? ').split(None, 1)
         except EOFError:
-            # Ctrl-D
-            print(file=sys.stderr)  # Clear line.
             break
         if not toks:
             usage()
@@ -71,10 +70,10 @@ def main(name, brief, debug, rec_debug, **unused_options):
             try:
                 arch = get_archive(arg)
             except NotAnArchiveError as e:
-                print(e, file=sys.stderr)
+                logger.error(e)
                 continue
             if arch is None:
-                print(arg, "not found", file=sys.stderr)
+                logger.error(f"{arg} not found")
                 continue
             stack.append((arg, arch))
             show(arg, arch)
@@ -84,11 +83,11 @@ def main(name, brief, debug, rec_debug, **unused_options):
             arg = arg.strip()
             data = get_data(arg, arch)
             if data is None:
-                print("Not found", file=sys.stderr)
+                logger.error("Not found")
                 continue
             filename = stdin_input('to filename? ')
             if not filename:
-                print(repr(data))
+                logger.error(repr(data))
             else:
                 with open(filename, 'wb') as fp:
                     fp.write(data)
@@ -106,15 +105,15 @@ def do_cleanup():
         try:
             os.remove(filename)
         except Exception as e:
-            print("could not delete", filename, e.args, file=sys.stderr)
+            logger.error(f"could not delete {filename} , {e.args}")
     cleanup = []
 
 
 def usage():
-    print("U: go up one level", file=sys.stderr)
-    print("O <name>: open embedded archive name", file=sys.stderr)
-    print("X <name>: extract name", file=sys.stderr)
-    print("Q: quit", file=sys.stderr)
+    logger.debug("U: go up one level")
+    logger.debug("O <name>: open embedded archive name")
+    logger.debug("X <name>: extract name")
+    logger.debug("Q: quit")
 
 
 def get_archive(name):
@@ -157,12 +156,12 @@ def get_data(name, arch):
 
 def show(name, arch):
     if isinstance(arch.toc, dict):
-        print(" Name: (ispkg, pos, len)")
+        logger.debug(" Name: (ispkg, pos, len)")
         toc = arch.toc
     else:
-        print(" pos, length, uncompressed, iscompressed, type, name")
+        logger.debug(" pos, length, uncompressed, iscompressed, type, name")
         toc = arch.toc.data
-    pprint.pprint(toc)
+    logger.debug(f'\n'.join([f'{x} : {toc[x]}' for x in toc]))
 
 
 def get_content(arch, recursive, brief, output):
@@ -192,10 +191,11 @@ def show_log(arch, recursive, brief):
     # first print all TOCs
     for out in output:
         if isinstance(out, dict):
-            pprint.pprint(out)
-    # then print the other entries
-    pprint.pprint([out for out in output if not isinstance(out, dict)])
+            logger.debug(f'\n'.join([f'{x} : {out[x]}' for x in out]))
 
+    # then print the other entries
+    [logger.debug(f'\n'.join([f'{x} : {out[x]}' for x in out])) for out in output if not isinstance(out, dict)]
+    
 
 def get_archive_content(filename):
     """
@@ -219,9 +219,10 @@ class ZlibArchive(pyimod02_archive.ZlibArchiveReader):
         """
         self.lib.seek(self.start)  # default - magic is at start of file.
         if self.lib.read(len(self.MAGIC)) != self.MAGIC:
-            raise RuntimeError("%s is not a valid %s archive file" % (self.path, self.__class__.__name__))
+            raise RuntimeError("%s is not a valid %s archive file" %
+                               (self.path, self.__class__.__name__))
         if self.lib.read(len(self.pymagic)) != self.pymagic:
-            print("Warning: pyz is from a different Python version", file=sys.stderr)
+            logger.warn("pyz is from a different Python version")
         self.lib.read(4)
 
 

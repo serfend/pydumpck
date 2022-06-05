@@ -1,5 +1,5 @@
 import os
-from ... import configuration, pyc_checker
+from ... import configuration, pyc_checker, logger
 from ...pyc_checker import extensions
 from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
@@ -35,11 +35,14 @@ class PackageStruct:
             t = configuration.thread_timeout
             code, err = pyc_checker.dump_pyc(file, file, t)
             if code:
-                print('[+] decompile bytecode', file, len(code))
+                logger.info(
+                    f'decompile bytecode on file:{file},length:{len(code)}')
             else:
-                print('[!] fail to decompile bytecode', file, err)
+                logger.error(
+                    f'fail to decompile bytecode on file:{file},with error:{err}')
         except Exception as e:
-            print('[!] Exception on decompile bytecode', file, e)
+            logger.error(
+                f'Exception on decompile bytecode file:{file},with error:{err}')
 
     def callback_pyc_decompile(self, f: str):
         PackageStruct.decompile_pyc(f)
@@ -88,15 +91,15 @@ class PackageStruct:
         return self.progress_waitter('dumping pyz files')
 
     def progress_check(self):
-        print('\nexport pyc')
+        logger.debug('\nexport pyc')
         self.progress_check_dumping_file()  # export pyc
-        print('\ndecompile pyc')
+        logger.debug('\ndecompile pyc')
         self.progress_check_pyc_decompile()  # decompile pyc
-        print('\nextract pyz')
+        logger.debug('\nextract pyz')
         self.progress_check_extract_pyz()  # extract pyz
-        print('\ndecompile pyc for `extract pyz`')
+        logger.debug('\ndecompile pyc for `extract pyz`')
         self.progress_check_pyc_decompile()  # decompile pyc for `extract pyz`
-        print('\nprogress_check completed')
+        logger.debug('\nprogress_check completed')
         pass
 
     def start_pyz_handle(self):
@@ -130,10 +133,10 @@ class PackageStruct:
             if data:
                 self.struct_data = data[0:data.find(b'\xe3')]
                 pyc_checker.default_pyc.file_header = self.struct_data
-                print('[+] struct file found', self.struct_data)
+                logger.info(f'struct file found:{self.struct_data}')
         elif package.name == pyc_checker.pyimod00_crypto_key:
             self.encrypt_key_file = package.out_file
-            print('[+] encrypt_file found', self.encrypt_key_file)
+            logger.info(f'encrypt_file found:{self.encrypt_key_file}')
 
     def dump(self):
         packages = self.packages

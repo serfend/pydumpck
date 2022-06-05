@@ -13,7 +13,7 @@ For more information, see here: https://github.com/serfend/pydumpck
 
 Good luck!
 """)
-
+from sgtpyutils.logger import logger
 import sys
 import os
 src_path = os.path.realpath(__file__)

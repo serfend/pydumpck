@@ -1,4 +1,4 @@
-
+from .. import logger
 import math
 import os
 import shutil
@@ -36,7 +36,7 @@ class CommonDump():
         }
 
     def handle_nofile(self, target_file: str):
-        print(target_file, "[-] is an invalid file name!")
+        logger.error(f'is an invalid file name! {target_file}')
         return -1
 
     @staticmethod
@@ -70,7 +70,7 @@ class CommonDump():
             n = f'{p_prefix}{p}'
             if n not in configuration.__dict__:
                 self.any_invalid_plugin = True
-                print(f'[!] no plugin named {p}')
+                logger.error(f'no plugin named {p}')
                 return None
             return [p, n]
         plugin = [filter_plugin(x) for x in plugin]
@@ -80,13 +80,13 @@ class CommonDump():
             all_valid_plugins = filter(lambda x: x.startswith(p_prefix), keys)
             all_valid_plugins = [x.replace(p_prefix, '')
                                  for x in all_valid_plugins]
-            print(f'[*] all valid plugins:{all_valid_plugins}')
+            logger.debug(f'all valid plugins:{all_valid_plugins}')
             time.sleep(5)
-        print('[*] plugins loaded with', [x[0] for x in plugin if x])
+        logger.debug(f'plugins loaded with {[x[0] for x in plugin if x]}')
         [setattr(configuration, x, True) for x in plugin_paths]
 
         if configuration.plugin_decompiler_enable_uncompyle6 and configuration.decompile_file == None:
-            print('[!] attention! when use uncompyle6 , you should use --decompile_file specified which file to decompile for faster task.')
+            logger.error('attention! when use uncompyle6 , you should use --decompile_file specified which file to decompile for faster task.')
             time.sleep(3)
 
     def statistics_status(self, is_end: bool = False):
@@ -94,7 +94,7 @@ class CommonDump():
             g = self.global_start_time
             cost = time.time() - g
             cost = math.ceil(cost*1e3)
-            print(f'[+] completed,cost {cost}ms', f'with result:{self.result}')
+            logger.info(f'completed,cost {cost}ms with result:{self.result}')
             return
         self.global_start_time = time.time()
 
@@ -113,13 +113,13 @@ class CommonDump():
             zip(decompile_file, [True for x in decompile_file])) if decompile_file else None
         self.load_plugins(plugin)
         if not target_file:
-            print('[!] target_file is required')
+            logger.error('target_file is required')
             return
         os.chdir(os.path.dirname(target_file))
-        print(f'[*] target file input:{target_file}\nto:{output_directory}')
+        logger.debug(f'target file input:{target_file}\nto:{output_directory}')
 
         if os.path.exists(output_directory):
-            print(f'[+] removing output_directory')
+            logger.info(f'removing output_directory')
             try:
                 shutil.rmtree(output_directory)
             except:
@@ -129,7 +129,7 @@ class CommonDump():
         if not dispatch_to in self.action_dispatch:
             self.result = f'unkonwn file-type:{file_type}->{dispatch_to}'
         else:
-            print(f'[*] start dump target file.')
+            logger.debug(f'start dump target file.')
             time.sleep(3)
             self.result = self.action_dispatch[dispatch_to](target_file)
 

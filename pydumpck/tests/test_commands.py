@@ -1,3 +1,4 @@
+from .. import logger
 import os
 from typing import List
 from pydumpck.pyinstaller_dump import run
@@ -7,7 +8,7 @@ import pydumpck.pyc_checker.extensions
 import sys
 import shutil
 def start_run():
-    print('params', sys.argv)
+    logger.info(f'params:{sys.argv}')
     return run()
 
 def check_uncompile_files(target_file: str):

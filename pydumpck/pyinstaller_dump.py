@@ -1,3 +1,4 @@
+from . import logger
 import argparse
 from typing import List
 import pydumpck.__version__ as __version__
@@ -94,11 +95,11 @@ def run():
     args = parser.parse_args()
     if not args.show_version == False:
         v = __version__.__version__
-        print(v)
+        logger.debug(v)
         return v
-    print(parser.description)
-    print('-' * 20)
-    print(f'[+] pydumpck initilizing with {__version__.__version__}')
+    desc = parser.description + '\n' + '-' * 20
+    content = f'pydumpck initilizing with {__version__.__version__}'
+    logger.info(f'{desc}\n{content}')
     try:
         dmp = CommonDump()
         return dmp.main(**vars(args))

@@ -1,3 +1,4 @@
+from ... import logger
 import os
 import shutil
 import time
@@ -17,11 +18,11 @@ def use_pycdc():
     else:
         pycdc_file = bin_path
         if not os.path.exists(pycdc_file):
-            print('[!] pycdc_file not exist , trying build it...')
+            logger.error('pycdc_file not exist , trying build it...')
             time.sleep(5)
             from . import build
             build_file, build_flag = build.build(pycdc_file)
-            print('get compile file path', build_file, build_flag)
+            logger.info(f'get compile file path:{build_file},is_build:{build_flag}')
                 
 
     if os.stat(pycdc_file).st_mode != 0o100777:
