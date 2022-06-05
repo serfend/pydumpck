@@ -1,6 +1,7 @@
 import shutil
 import os
-from .. import logger
+from pydumpck import logger
+
 from .common import res_type
 import pydumpck.pyc_checker
 import pydumpck.pyc_checker.extensions

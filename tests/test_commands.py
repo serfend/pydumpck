@@ -1,4 +1,4 @@
-from .. import logger
+from pydumpck import logger
 import os
 from typing import List
 from pydumpck.pyinstaller_dump import run

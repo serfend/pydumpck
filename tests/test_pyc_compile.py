@@ -1,5 +1,5 @@
 import math
-from .. import logger
+from pydumpck import logger
 from typing import List
 import time
 import pydumpck.pyc_checker.lib_pycdc
