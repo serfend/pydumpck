@@ -86,7 +86,8 @@ class CommonDump():
         [setattr(configuration, x, True) for x in plugin_paths]
 
         if configuration.plugin_decompiler_enable_uncompyle6 and configuration.decompile_file == None:
-            logger.error('attention! when use uncompyle6 , you should use --decompile_file specified which file to decompile for faster task.')
+            logger.error(
+                'attention! when use uncompyle6 , you should use --decompile_file specified which file to decompile for faster task.')
             time.sleep(3)
 
     def statistics_status(self, is_end: bool = False):
@@ -102,6 +103,8 @@ class CommonDump():
         self.statistics_status()
         print_banner()
         if struct_headers:
+            if isinstance(struct_headers, List):
+                struct_headers = ''.join(struct_headers)
             pyc_header = bytes.fromhex(struct_headers.replace(' ', ''))
             pyc_checker.default_pyc = PycHandler(pyc_header)
 
