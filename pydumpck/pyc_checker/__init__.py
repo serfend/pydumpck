@@ -63,7 +63,7 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
                 f.write(result[0].encode('utf-8'))
         else:
             logger.warning(
-                f'decompile bytecode by pycdc fail,file:{target_file},with error:{e}')
+                f'decompile bytecode by pycdc fail,file:{target_file},with error:{err}')
         return result
     except Exception as e:
         logger.warning(
