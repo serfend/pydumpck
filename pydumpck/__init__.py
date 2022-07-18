@@ -16,6 +16,7 @@ Good luck!
 from sgtpyutils.logger import logger
 import sys
 import os
+print(sys.version_info)
 src_path = os.path.realpath(__file__)
 src_dir = os.path.dirname(src_path)
 sys.path.append(src_dir)
