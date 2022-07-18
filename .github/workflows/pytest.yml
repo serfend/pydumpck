@@ -31,7 +31,7 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Test with pytest
         run: |
-          python pytest -v --full-trace --durations 10
+          pytest -v --full-trace --durations 10
       - name: Devops Debug
         if: ${{ failure() }}
         run: |
