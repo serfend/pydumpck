@@ -27,14 +27,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pipenv
-          pipenv lock --clear
-          pipenv install
-          pipenv install pytest
-          pip install -r requirements.txt
+          python -m pip install pytest
+          python -m pip install -r requirements.txt
       - name: Test with pytest
         run: |
-          pipenv run pytest -v --full-trace --durations 10
+          python pytest -v --full-trace --durations 10
       - name: Devops Debug
         if: ${{ failure() }}
         run: |
