@@ -85,6 +85,15 @@ def run():
     )
 
     parser.add_argument(
+        '-l',
+        '--logger',
+        default=False,
+        nargs=argparse.OPTIONAL,
+        type=bool,
+        dest='disable_log',
+        help='disable file and console log',
+    )
+    parser.add_argument(
         '-p',
         '--plugin',
         default=['pycdc'],
@@ -93,6 +102,10 @@ def run():
         help='enable decompiler plugins,split by space .example: `--plugin pycdc uncompyle6` (default: %(default)s).available:pycdc,uncompyle6',
     )
     args = parser.parse_args()
+    if not args.disable_log == False:
+        import sgtpyutils.logger
+        sgtpyutils.logger.disable()
+
     if not args.show_version == False:
         v = __version__.__version__
         logger.debug(v)

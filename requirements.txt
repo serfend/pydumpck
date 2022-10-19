@@ -1,4 +1,4 @@
-sgtpyutils
+sgtpyutils >= 1.15.10
 pyinstaller
 tinyaes
 uncompyle6 >= 3.8.0
