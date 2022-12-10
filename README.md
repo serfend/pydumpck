@@ -45,7 +45,7 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -o OUTPUT_DIRECTORY, --ouput OUTPUT_DIRECTORY
+  -o OUTPUT_DIRECTORY, --output OUTPUT_DIRECTORY
                         output archive file to (default: output_2938294).
   -w THREAD, --thread THREAD
                         thread count for running (default: 0) cpu-count * 8.

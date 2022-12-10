@@ -17,7 +17,7 @@ def run():
 
     parser.add_argument(
         '-o',
-        '--ouput',
+        '--output',
         default=pydumpck.utils.paths.get_random_path('output'),
         type=str,
         dest='output_directory',
