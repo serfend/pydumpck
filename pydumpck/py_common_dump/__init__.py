@@ -10,6 +10,23 @@ from ..py_package import PackageStruct, PackageDescription
 from PyInstaller.utils.cliutils.archive_viewer import get_archive, get_data, get_content, get_archive_content
 
 
+class FileTypeFlag():
+    FLAG_NOTFILE = 'nofile'
+    FLAG_ARCH = 'arch'
+    FLAG_PYC = 'pyc'
+    FLAG_TYPE_UNKNOWN = 'TYPE_UNKNOWN'
+
+
+class FileType():
+    FILE_EXE = 'exe'
+    FILE_PE = 'pe'
+    FILE_ELF = 'elf'
+    FILE_PYZ = 'pyz'
+    FILE_PYC = 'pyc'
+    FILE_NOTFILE = 'notfile'
+    FILE_UNKNOWN = 'unknown'
+
+
 class CommonDump():
 
     @property
@@ -22,17 +39,23 @@ class CommonDump():
         self.total_handled_count = 0
         self._file_struct_pyc: PackageStruct = None
         self.action_dispatch = {
-            'nofile': self.handle_nofile,
-            'arch': self.handle_arch_file,
-            'pyc': self.handle_pyc_file
+            FileTypeFlag.FLAG_NOTFILE: self.handle_nofile,
+            FileTypeFlag.FLAG_ARCH: self.handle_arch_file,
+            FileTypeFlag.FLAG_PYC: self.handle_pyc_file,
+            FileTypeFlag.FLAG_TYPE_UNKNOWN: self.handle_unknown,
         }
         self.action_map = {
-            'exe': 'arch',
-            'pe': 'arch',
-            'elf': 'arch',
-            'pyz': 'arch',
-            'pyc': 'pyc',
+            FileType.FILE_EXE: FileTypeFlag.FLAG_ARCH,
+            FileType.FILE_PE: FileTypeFlag.FLAG_ARCH,
+            FileType.FILE_ELF: FileTypeFlag.FLAG_ARCH,
+            FileType.FILE_PYZ: FileTypeFlag.FLAG_ARCH,
+            FileType.FILE_PYC: FileTypeFlag.FLAG_PYC,
+            FileType.FILE_NOTFILE: FileTypeFlag.FLAG_NOTFILE,
+            FileType.FILE_UNKNOWN: FileTypeFlag.FLAG_TYPE_UNKNOWN
         }
+
+    def handle_unknown(self, target_file: str):
+        return f'unkonwn file-type:{target_file}'
 
     def handle_nofile(self, target_file: str):
         logger.error(f'is an invalid file name! {target_file}')
@@ -116,7 +139,6 @@ class CommonDump():
         if not target_file:
             logger.error('target_file is required')
             return
-        os.chdir(os.path.dirname(target_file))
         logger.debug(f'target file input:{target_file}\nto:{output_directory}')
 
         if os.path.exists(output_directory):
@@ -127,12 +149,12 @@ class CommonDump():
                 pass
         file_type = target_file_type or self.get_filetype(target_file)
         dispatch_to = self.action_map.get(file_type, None)
-        if not dispatch_to in self.action_dispatch:
-            self.result = f'unkonwn file-type:{file_type}->{dispatch_to}'
-        else:
-            logger.debug(f'start dump target file.')
+
+        logger.debug(f'start dump target file.')
+        if dispatch_to != FileTypeFlag.FLAG_NOTFILE:
+            os.chdir(os.path.dirname(target_file))
             time.sleep(3)
-            self.result = self.action_dispatch[dispatch_to](target_file)
+        self.result = self.action_dispatch[dispatch_to](target_file)
 
         self.statistics_status(True)
         return self.result
@@ -140,19 +162,19 @@ class CommonDump():
     @staticmethod
     def get_filetype(filepath: str):
         if not isinstance(filepath, str) or not os.path.isfile(filepath):
-            return 'nofile'
+            return FileType.FILE_NOTFILE
         header_data: bytes = None
         with open(filepath, 'rb') as f:
             header_data = f.read(0x20)
         if header_data[0:3] == b'MZ\x90':
-            return 'exe'
+            return FileType.FILE_EXE
         if header_data[0:4] == b'PYZ\x00':
-            return 'pyz'
+            return FileType.FILE_PYZ
         if header_data[0:4] == b'\x7fELF':
-            return 'elf'
+            return FileType.FILE_ELF
         if header_data.find(bytes.fromhex('e3' + '0' * 14)) > -1:
-            return 'pyc'
-        return 'TYPE_UNKNOWN'
+            return FileType.FILE_PYC
+        return FileType.FILE_UNKNOWN
 
     def extract_arch(self, arch, current_directory: str):
         if not os.path.exists(current_directory):
