@@ -1,4 +1,4 @@
-from ..pydumpck.tests import test_file_analysis
+from . import test_file_analysis
 start_test = test_file_analysis.start_arch_file
 
 
