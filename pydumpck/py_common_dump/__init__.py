@@ -140,6 +140,8 @@ class CommonDump():
             logger.error('target_file is required')
             return
         logger.debug(f'target file input:{target_file}\nto:{output_directory}')
+        if not os.path.exists(target_file):
+            logger.error('target_file not exist')
 
         if os.path.exists(output_directory):
             logger.info(f'removing output_directory')
