@@ -155,6 +155,7 @@ class CommonDump():
         logger.debug(f'start dump target file.')
         if dispatch_to != FileTypeFlag.FLAG_NOTFILE:
             os.chdir(os.path.dirname(target_file))
+            target_file = os.path.basename(target_file) # convert absolute path to relative path
             time.sleep(3)
         self.result = self.action_dispatch[dispatch_to](target_file)
 

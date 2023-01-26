@@ -7,9 +7,13 @@ import pydumpck.configuration
 import pydumpck.pyc_checker.extensions
 import sys
 import shutil
+import pytest
+
+
 def start_run():
     logger.info(f'params:{sys.argv}')
     return run()
+
 
 def check_uncompile_files(target_file: str):
     assert os.path.exists(pydumpck.pyc_checker.extensions.get_pycdc_path(
@@ -56,6 +60,27 @@ def test_commands_elf():
 def test_no_input():
     sys.argv = [sys.argv[0]]
     start_run()
+
+
+def test_absolute_path():
+    elf = res_type.get_res('elf')
+    absolute_path = f'{os.path.sep}tmp{os.path.sep}' if os.name == 'posix' else f'C:{os.path.sep}Windows{os.path.sep}Temp{os.path.sep}'
+    absolute_path += pydumpck.utils.paths.get_random_path('test')
+    shutil.copy(elf[0], absolute_path)
+    args = [
+        absolute_path,
+        "--plugin",
+        "pycdc",
+        "uncompyle6",
+        "--decompile_file",
+        "main",
+        "squid",
+        "squid_game"
+    ]
+    sys.argv = [sys.argv[0]] + args
+    start_run()
+    check_files(['squid'], ['squid_game'])
+    os.remove(absolute_path)
 
 
 def test_version():
