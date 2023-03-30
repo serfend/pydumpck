@@ -113,13 +113,12 @@ class CommonDump():
             time.sleep(3)
 
     def statistics_status(self, is_end: bool = False):
+        from sgtpyutils import timer
         if is_end:
-            g = self.global_start_time
-            cost = time.time() - g
-            cost = math.ceil(cost*1e3)
-            logger.info(f'completed,cost {cost}ms with result:{self.result}')
+            t = self.global_start_time
+            logger.info(f'completed,cost {math.ceil(t.spent * 1000)}ms with result:{self.result}')
             return
-        self.global_start_time = time.time()
+        self.global_start_time = timer.create_timer()
 
     def main(self, target_file: str, output_directory: str, thread: int = 0, timeout: int = 10, target_file_type: str = None, session_timeout: int = 120, plugin: List = [], decompile_file: List = None, struct_headers: str = None, **args):
         self.statistics_status()
