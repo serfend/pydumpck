@@ -151,9 +151,11 @@ class CommonDump():
         file_type = target_file_type or self.get_filetype(target_file)
         dispatch_to = self.action_map.get(file_type, None)
 
-        logger.debug(f'start dump target file.')
+        logger.debug(f'start dump target file. type:{dispatch_to}')
         if dispatch_to != FileTypeFlag.FLAG_NOTFILE:
-            os.chdir(os.path.dirname(target_file))
+            abs_path = os.path.abspath(target_file)
+            target_dir = os.path.dirname(abs_path)
+            os.chdir(target_dir)
             target_file = os.path.basename(target_file) # convert absolute path to relative path
             time.sleep(3)
         self.result = self.action_dispatch[dispatch_to](target_file)
