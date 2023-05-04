@@ -7,7 +7,46 @@ from typing import List
 from .. import configuration, pyc_checker
 from ..pyc_checker.pyc import PycHandler
 from ..py_package import PackageStruct, PackageDescription
-from PyInstaller.utils.cliutils.archive_viewer import get_archive, get_data, get_content, get_archive_content
+from PyInstaller.utils.cliutils.archive_viewer import ArchiveViewer
+
+import sys
+from PyInstaller.archive.readers import CArchiveReader, ZlibArchiveReader
+from sgtpyutils.logger import logger
+
+
+
+
+def get_archive(filename: str):
+    viewer = ArchiveViewer(filename=filename,
+                           interactive_mode=False,
+                           recursive_mode=False,
+                           brief_mode=True)
+    arch = None
+    arch = viewer._open_toplevel_archive(filename)
+    return arch
+    archive_name = os.path.basename(viewer.filename)
+    viewer.stack.append((archive_name, arch))
+    archive_count = 0
+    toc = {}
+    while viewer.stack:
+        archive_name, archive = viewer.stack.pop()
+        archive_count += 1
+        toc[archive_name] = archive
+        if not viewer.recursive_mode:
+            continue
+
+        # Scan for embedded archives
+        if isinstance(archive, CArchiveReader):
+            for name, (*_, typecode) in archive.toc.items():
+                if typecode == 'z':
+                    try:
+                        embedded_archive = archive.open_embedded_archive(name)
+                    except Exception as e:
+                        logger.warn(
+                            f"Could not open embedded archive {name!r}: {e}")
+                    viewer.stack.append((name, embedded_archive))
+    setattr(viewer, 'toc', toc)
+    return viewer
 
 
 class FileTypeFlag():
@@ -79,7 +118,8 @@ class CommonDump():
 
     def handle_arch_file(self, target_file: str):
         output_dir = self.build_output_dir()
-        arch = get_archive(target_file)
+        arch = get_archive(filename=target_file)
+
         self.extract_arch(arch, output_dir)
         self.file_struct_pyc.progress_check()
         return f'{self.total_handled_count} arch file(s) handled.'
@@ -116,7 +156,8 @@ class CommonDump():
         from sgtpyutils import timer
         if is_end:
             t = self.global_start_time
-            logger.info(f'completed,cost {math.ceil(t.spent * 1000)}ms with result:{self.result}')
+            logger.info(
+                f'completed,cost {math.ceil(t.spent * 1000)}ms with result:{self.result}')
             return
         self.global_start_time = timer.create_timer()
 
@@ -156,7 +197,8 @@ class CommonDump():
             abs_path = os.path.abspath(target_file)
             target_dir = os.path.dirname(abs_path)
             os.chdir(target_dir)
-            target_file = os.path.basename(target_file) # convert absolute path to relative path
+            # convert absolute path to relative path
+            target_file = os.path.basename(target_file)
             time.sleep(3)
         self.result = self.action_dispatch[dispatch_to](target_file)
 
@@ -184,12 +226,16 @@ class CommonDump():
         if not os.path.exists(current_directory):
             os.makedirs(current_directory)
         children_package = arch.toc
-        if isinstance(children_package, dict):
-            children_package = list(filter(
-                lambda x: not x.startswith('_'), list(children_package)))
-        else:
-            children_package = children_package.data
-        children_package = list(children_package)
+        # if isinstance(children_package, dict):
+        #     children_package = list(filter(
+        #         lambda x: not x.startswith('_'), list(children_package)))
+        # else:
+        #     children_package = children_package.data
+        # children_package = list(children_package)
+
+        children_package = list(children_package.items())
+        children_package = list(
+            filter(lambda x: not x[0].startswith('_'), children_package))
         self.total_handled_count += len(children_package)
         for package in children_package:
             p = PackageDescription(package, arch, current_directory)

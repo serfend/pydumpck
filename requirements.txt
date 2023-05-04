@@ -1,5 +1,5 @@
 sgtpyutils >= 1.15.14
-pyinstaller
+pyinstaller >= 5.10.1
 tinyaes
 uncompyle6 >= 3.8.0
 xdis >= 6.0.4

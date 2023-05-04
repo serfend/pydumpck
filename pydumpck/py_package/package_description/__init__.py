@@ -3,9 +3,32 @@ import os
 from ...configuration.res_lock import check_directory
 from ...pyc_checker import pyz_extract
 import zipfile
-from PyInstaller.utils.cliutils.archive_viewer import get_archive, get_data, get_content, get_archive_content
 from PyInstaller.archive.readers import CArchiveReader, NotAnArchiveError
-from PyInstaller.utils.cliutils.archive_viewer import ZlibArchive
+import zlib
+
+
+def get_data(name, arch):
+    """
+    Extract data for the given entry name.
+    """
+
+    entry = arch.toc.get(name)
+    if entry is None:
+        raise KeyError(f"No entry named {name} found in the archive!")
+    if len(entry) > 3:
+        entry_offset, data_length, uncompressed_length, compression_flag, typecode = entry
+    else:
+        typecode, entry_offset, data_length = entry
+        compression_flag = True
+    with open(arch._filename, "rb") as fp:
+        fp.seek(arch._start_offset + entry_offset, os.SEEK_SET)
+        data = fp.read(data_length)
+
+    if compression_flag:
+        import zlib
+        data = zlib.decompress(data)
+
+    return data
 
 
 class PackageDescription:
@@ -16,16 +39,18 @@ class PackageDescription:
     raw_file_init: bool = False
     exception: Exception = None  # save the error on dumping
 
+    def __repr__(self) -> str:
+        return f'{self.name}:{self.type}'
+
     def __init__(self, package, arch, current_directory: str):
         self.arch = arch
         self.current_directory = current_directory
         self.parent = None
-        if isinstance(package, tuple):
-            self.name = package[5]
-            self.type = package[4]
-        else:
-            self.name = package
-            self.type = 'm'
+        self.name = package[0]
+        self.data = package[1]
+        if len(self.data) > 3:
+            pass
+        self.type = self.data[4] if len(self.data) > 3 else 'm'
 
     def dump_to_file(self):
         self.dump_raw_file()

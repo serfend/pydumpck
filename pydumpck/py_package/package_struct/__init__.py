@@ -143,4 +143,5 @@ class PackageStruct:
         self.packages = []
         self.total_count = len(packages)
         self.handle_count = 0
-        [self.pool.submit(self.handle_single, p) for p in packages]
+        # [self.pool.submit(self.handle_single, p) for p in packages]
+        [self.handle_single(p) for p in packages]
