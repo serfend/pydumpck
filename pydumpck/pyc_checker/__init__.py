@@ -98,11 +98,16 @@ def dump(data: bytes, target_file: str, structed_pyc_file: str, timeout: int = 1
     filename = extensions.get_filename(structed_pyc_file)
     if configuration.decompile_file != None and filename not in configuration.decompile_file and pyimod00_crypto_key != filename:
         return (None, f'not in decompile files:{filename}')
-    content_cdc, err_cdc = exec_pycdc(structed_pyc_file, target_file, timeout)
-    content_uncompyle6, err_uncompyle6 = exec_uncompyle6(
-        structed_pyc_file, target_file, timeout)
+    err_cdc = err_uncompyle6 = None
+    content_cdc = content_uncompyle6 = None
+    if configuration.plugin_decompiler_enable_pycdc:
+        content_cdc, err_cdc = exec_pycdc(
+            structed_pyc_file, target_file, timeout)
+    if configuration.plugin_decompiler_enable_uncompyle6:
+        content_uncompyle6, err_uncompyle6 = exec_uncompyle6(
+            structed_pyc_file, target_file, timeout)
     # TODO log error info
-    content = content_cdc or content_uncompyle6
+    content = content_cdc or content_uncompyle6 or 'no plugin is enable.'
     err = err_cdc or err_uncompyle6
     err = Exception(
         err, f'fail when handling {target_file} -> {structed_pyc_file}') if isinstance(err, Exception) else err
