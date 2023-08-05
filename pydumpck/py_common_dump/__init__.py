@@ -10,7 +10,7 @@ from ..py_package import PackageStruct, PackageDescription
 from PyInstaller.utils.cliutils.archive_viewer import ArchiveViewer
 
 import sys
-from PyInstaller.archive.readers import CArchiveReader, ZlibArchiveReader
+from PyInstaller.archive.readers import CArchiveReader, ZlibArchiveReader,ArchiveReadError
 from sgtpyutils.logger import logger
 
 
@@ -22,7 +22,15 @@ def get_archive(filename: str):
                            recursive_mode=False,
                            brief_mode=True)
     arch = None
-    arch = viewer._open_toplevel_archive(filename)
+    msg = f'fail while extract archive file:{filename}.'
+    try:
+        arch = viewer._open_toplevel_archive(filename)
+    except ArchiveReadError as ex:
+        logger.error(f'{msg}make sure your file is a valid archive-python file instead of orgin-exe or others.{ex}')
+        sys.exit(-10010)
+    except Exception as ex:
+        logger.error(f'{msg}{ex}')
+        sys.exit(-10011)
     return arch
     archive_name = os.path.basename(viewer.filename)
     viewer.stack.append((archive_name, arch))
