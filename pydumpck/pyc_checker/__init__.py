@@ -51,19 +51,20 @@ def exec_pycdc(structed_pyc_file: str, target_file: str, timeout: int = 10):
         content = p.stdout.decode('utf-8')
         err, warning = split_warning_error(p.stderr.decode('utf-8'))
         if warning:
-            logger.warning(
-                f'\n{warning}\non exec_pycdc:{structed_pyc_file}')
+            msg = f'\n{warning}\non exec_pycdc:{structed_pyc_file}'
+            logger.warning(msg)
         if not err:
             err = None
-        result = (remove_pycdc_banner(content), err)
+        code_content = remove_pycdc_banner(content)
+        result = (code_content, err)
         if content:
-            logger.info(
-                f'decompile bytecode by pycdc success on file:{target_file},length:{len(result[0])}')
+            msg = f'decompile bytecode by pycdc success on file:{target_file},length:{len(code_content)}'
+            logger.info(msg)
             with open(extensions.get_pycdc_path(target_file), 'wb') as f:
-                f.write(result[0].encode('utf-8'))
+                f.write(code_content.encode('utf-8'))
         else:
-            logger.warning(
-                f'decompile bytecode by pycdc fail,file:{target_file},with error:{err}')
+            msg = f'decompile bytecode by pycdc fail,file:{target_file},with error:{err}'
+            logger.warning(msg)
         return result
     except Exception as e:
         logger.warning(
