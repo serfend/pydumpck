@@ -28,7 +28,7 @@ def resources_filter(resoueces: Dict, keys: List):
 
 
 resources_arch = resources_filter(
-    resources, ['exe-3.10', 'exe-encrypt', 'elf', 'pyz'])
+    resources, ['exe-3.10', 'exe-3.10-v2', 'exe-encrypt', 'elf', 'pyz'])
 
 
 @pytest.fixture(scope='function', params=list(resources))
