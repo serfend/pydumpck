@@ -6,6 +6,11 @@ from pydumpck.py_common_dump import CommonDump
 import pydumpck.utils.paths
 import time
 
+import logging
+cur_handlers = logging.root.handlers
+if cur_handlers:
+    logging.root.removeHandler(cur_handlers[0])
+
 
 def run():
     parser = argparse.ArgumentParser(description=__version__.__description__)
@@ -73,7 +78,7 @@ def run():
         dest='struct_headers',
         help='specify pyc header hex-string (default: %(default)s).if not set , pydumpck will use struct.pyc\'s header(if possible) and default header.eg:6f0d0d0a 00000000 00000000 ffffffff',
     )
-    
+
     parser.add_argument(
         '-v',
         '--version',
