@@ -100,7 +100,6 @@ class PyInstArchive:
     def __init__(self, path):
         self.filePath = path
 
-
     def open(self):
         try:
             self.fPtr = open(self.filePath, 'rb')
@@ -110,13 +109,11 @@ class PyInstArchive:
             return False
         return True
 
-
     def close(self):
         try:
             self.fPtr.close()
         except:
             pass
-
 
     def checkFile(self):
         logger.info('Processing {0}'.format(self.filePath))
@@ -151,7 +148,8 @@ class PyInstArchive:
                 break
 
         if self.cookiePos == -1:
-            logger.error('Error : Missing cookie, unsupported pyinstaller version or not a pyinstaller archive')
+            logger.error(
+                'Error : Missing cookie, unsupported pyinstaller version or not a pyinstaller archive')
             return False
 
         self.fPtr.seek(self.cookiePos + self.PYINST20_COOKIE_SIZE, os.SEEK_SET)
@@ -165,7 +163,6 @@ class PyInstArchive:
 
         return True
 
-
     def getCArchiveInfo(self):
         try:
             if self.pyinstVer == 20:
@@ -173,14 +170,16 @@ class PyInstArchive:
 
                 # Read CArchive cookie
                 (magic, lengthofPackage, toc, tocLen, self.pyver) = \
-                struct.unpack('!8siiii', self.fPtr.read(self.PYINST20_COOKIE_SIZE))
+                    struct.unpack('!8siiii', self.fPtr.read(
+                        self.PYINST20_COOKIE_SIZE))
 
             elif self.pyinstVer == 21:
                 self.fPtr.seek(self.cookiePos, os.SEEK_SET)
 
                 # Read CArchive cookie
                 (magic, lengthofPackage, toc, tocLen, self.pyver, pylibname) = \
-                struct.unpack('!8siiii64s', self.fPtr.read(self.PYINST21_COOKIE_SIZE))
+                    struct.unpack('!8siiii64s', self.fPtr.read(
+                        self.PYINST21_COOKIE_SIZE))
 
         except:
             logger.error('Error : The file is not a pyinstaller archive')
@@ -189,8 +188,10 @@ class PyInstArchive:
         logger.info('Python version: {0}'.format(self.pyver))
 
         # Additional data after the cookie
-        tailBytes = self.fileSize - self.cookiePos - (self.PYINST20_COOKIE_SIZE if self.pyinstVer == 20 else self.PYINST21_COOKIE_SIZE)
-        
+        tailBytes = self.fileSize - self.cookiePos - \
+            (self.PYINST20_COOKIE_SIZE if self.pyinstVer ==
+             20 else self.PYINST21_COOKIE_SIZE)
+
         # Overlay is the data appended at the end of the PE
         self.overlaySize = lengthofPackage + tailBytes
         self.overlayPos = self.fileSize - self.overlaySize
@@ -199,7 +200,6 @@ class PyInstArchive:
 
         logger.info('Length of package: {0} bytes'.format(lengthofPackage))
         return True
-
 
     def parseTOC(self):
         # Go to the table of contents
@@ -214,42 +214,44 @@ class PyInstArchive:
             nameLen = struct.calcsize('!iiiiBc')
 
             (entryPos, cmprsdDataSize, uncmprsdDataSize, cmprsFlag, typeCmprsData, name) = \
-            struct.unpack( \
-                '!iiiBc{0}s'.format(entrySize - nameLen), \
+                struct.unpack(
+                '!iiiBc{0}s'.format(entrySize - nameLen),
                 self.fPtr.read(entrySize - 4))
 
             name = name.decode('utf-8').rstrip('\0')
             if len(name) == 0:
                 name = str(uniquename())
-                logger.error('Warning: Found an unamed file in CArchive. Using random name {0}'.format(name))
+                logger.error(
+                    'Warning: Found an unamed file in CArchive. Using random name {0}'.format(name))
 
-            self.tocList.append( \
-                                CTOCEntry(                      \
-                                    self.overlayPos + entryPos, \
-                                    cmprsdDataSize,             \
-                                    uncmprsdDataSize,           \
-                                    cmprsFlag,                  \
-                                    typeCmprsData,              \
-                                    name                        \
-                                ))
+            self.tocList.append(
+                CTOCEntry(
+                    self.overlayPos + entryPos,
+                    cmprsdDataSize,
+                    uncmprsdDataSize,
+                    cmprsFlag,
+                    typeCmprsData,
+                    name
+                ))
 
             parsedLen += entrySize
         logger.info('Found {0} files in CArchive'.format(len(self.tocList)))
 
-
     def _writeRawData(self, filepath, data):
-        nm = filepath.replace('\\', os.path.sep).replace('/', os.path.sep).replace('..', '__')
+        nm = filepath.replace('\\', os.path.sep).replace(
+            '/', os.path.sep).replace('..', '__')
         nmDir = os.path.dirname(nm)
-        if nmDir != '' and not os.path.exists(nmDir): # Check if path exists, create if not
+        # Check if path exists, create if not
+        if nmDir != '' and not os.path.exists(nmDir):
             os.makedirs(nmDir)
 
         with open(nm, 'wb') as f:
             f.write(data)
 
-
     def extractFiles(self):
         logger.info('Beginning extraction...please standby')
-        extractionDir = os.path.join(os.getcwd(), os.path.basename(self.filePath) + '_extracted')
+        extractionDir = os.path.join(
+            os.getcwd(), os.path.basename(self.filePath) + '_extracted')
 
         if not os.path.exists(extractionDir):
             os.mkdir(extractionDir)
@@ -264,7 +266,7 @@ class PyInstArchive:
                 data = zlib.decompress(data)
                 # Malware may tamper with the uncompressed size
                 # Comment out the assertion in such a case
-                assert len(data) == entry.uncmprsdDataSize # Sanity Check
+                assert len(data) == entry.uncmprsdDataSize  # Sanity Check
 
             if entry.typeCmprsData == b'd' or entry.typeCmprsData == b'o':
                 # d -> ARCHIVE_ITEM_DEPENDENCY
@@ -296,39 +298,40 @@ class PyInstArchive:
                 if entry.typeCmprsData == b'z' or entry.typeCmprsData == b'Z':
                     self._extractPyz(entry.name)
 
-
     def _writePyc(self, filename, data):
         with open(filename, 'wb') as pycFile:
             pycFile.write(pyc_magic)            # pyc magic
 
             if self.pyver >= 37:                # PEP 552 -- Deterministic pycs
                 pycFile.write(b'\0' * 4)        # Bitfield
-                pycFile.write(b'\0' * 8)        # (Timestamp + size) || hash 
+                pycFile.write(b'\0' * 8)        # (Timestamp + size) || hash
 
             else:
                 pycFile.write(b'\0' * 4)      # Timestamp
                 if self.pyver >= 33:
-                    pycFile.write(b'\0' * 4)  # Size parameter added in Python 3.3
+                    # Size parameter added in Python 3.3
+                    pycFile.write(b'\0' * 4)
 
             pycFile.write(data)
 
-
     def _extractPyz(self, name):
-        dirName =  name + '_extracted'
+        dirName = name + '_extracted'
         # Create a directory for the contents of the pyz
         if not os.path.exists(dirName):
             os.mkdir(dirName)
 
         with open(name, 'rb') as f:
             pyzMagic = f.read(4)
-            assert pyzMagic == b'PYZ\0' # Sanity Check
+            assert pyzMagic == b'PYZ\0'  # Sanity Check
 
-            pycHeader = f.read(4) # Python magic value
+            pycHeader = f.read(4)  # Python magic value
 
             # Skip PYZ extraction if not running under the same python version
             if pyc_magic != pycHeader:
-                logger.error('Warning: This script is running in a different Python version than the one used to build the executable.')
-                logger.error('Please run this script in Python{0} to prevent extraction errors during unmarshalling'.format(self.pyver))
+                logger.error(
+                    'Warning: This script is running in a different Python version than the one used to build the executable.')
+                logger.error(
+                    'Please run this script in Python{0} to prevent extraction errors during unmarshalling'.format(self.pyver))
                 logger.error('Skipping pyz extraction')
                 return
 
@@ -338,7 +341,8 @@ class PyInstArchive:
             try:
                 toc = marshal.load(f)
             except:
-                logger.error('Unmarshalling FAILED. Cannot extract {0}. Extracting remaining files.'.format(name))
+                logger.error(
+                    'Unmarshalling FAILED. Cannot extract {0}. Extracting remaining files.'.format(name))
                 return
 
             logger.info('Found {0} files in PYZ archive'.format(len(toc)))
@@ -359,7 +363,8 @@ class PyInstArchive:
                     pass
 
                 # Prevent writing outside dirName
-                fileName = fileName.replace('..', '__').replace('.', os.path.sep)
+                fileName = fileName.replace(
+                    '..', '__').replace('.', os.path.sep)
 
                 if ispkg == 1:
                     filePath = os.path.join(dirName, fileName, '__init__.pyc')
@@ -375,7 +380,8 @@ class PyInstArchive:
                     data = f.read(length)
                     data = zlib.decompress(data)
                 except:
-                    logger.error('Error: Failed to decompress {0}, probably encrypted. Extracting as is.'.format(filePath))
+                    logger.error(
+                        'Error: Failed to decompress {0}, probably encrypted. Extracting as is.'.format(filePath))
                     open(filePath + '.encrypted', 'wb').write(data)
                 else:
                     self._writePyc(filePath, data)
@@ -393,7 +399,9 @@ def main():
                     arch.parseTOC()
                     arch.extractFiles()
                     arch.close()
-                    logger.info('Successfully extracted pyinstaller archive: {0}\nYou can now use a python decompiler on the pyc files within the extracted directory''.format(sys.argv[1]))
+                    msg1 = 'Successfully extracted pyinstaller archive: '
+                    msg = 'You can now use a python decompiler on the pyc files within the extracted directory'
+                    logger.info(f'{msg1}{sys.argv[1]}\n{msg}')
                     return
 
             arch.close()
