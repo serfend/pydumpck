@@ -4,16 +4,15 @@ import os
 import shutil
 import time
 from typing import List
-from .. import configuration, pyc_checker
+from .. import configuration, pyc_checker, utils
 from ..pyc_checker.pyc import PycHandler
 from ..py_package import PackageStruct, PackageDescription
 from PyInstaller.utils.cliutils.archive_viewer import ArchiveViewer
 
 import sys
-from PyInstaller.archive.readers import CArchiveReader, ZlibArchiveReader,ArchiveReadError
+from PyInstaller.archive.readers import CArchiveReader, ZlibArchiveReader, ArchiveReadError
 from sgtpyutils.logger import logger
-
-
+from sgtpyutils.database.filebase_database import Database
 
 
 def get_archive(filename: str):
@@ -26,7 +25,8 @@ def get_archive(filename: str):
     try:
         arch = viewer._open_toplevel_archive(filename)
     except ArchiveReadError as ex:
-        logger.error(f'{msg}make sure your file is a valid archive-python file instead of orgin-exe or others.{ex}')
+        logger.error(
+            f'{msg}make sure your file is a valid archive-python file instead of orgin-exe or others.{ex}')
         sys.exit(-10010)
     except Exception as ex:
         logger.error(f'{msg}{ex}')
@@ -109,10 +109,20 @@ class CommonDump():
         return -1
 
     @staticmethod
+    def clear_history(target: str):
+        '''remove if using default path'''
+        if not os.path.exists(target):
+            return
+        if configuration.thread_output_directory_customed:
+            return
+        logger.info(f'removing output_directory:{target}')
+        shutil.rmtree(target)
+
+    @staticmethod
     def build_output_dir(clear=True):
         output_dir = configuration.thread_output_directory
-        if clear and os.path.exists(output_dir):
-            shutil.rmtree(output_dir)
+        if clear:
+            CommonDump.clear_history(output_dir)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         return output_dir
@@ -179,7 +189,13 @@ class CommonDump():
 
         configuration.thread_count = thread  # thread
         configuration.thread_timeout = timeout
+
+        if output_directory:
+            configuration.thread_output_directory_customed = True
+        else:
+            output_directory = utils.paths.get_random_path('output')
         configuration.thread_output_directory = output_directory
+
         configuration.progress_session_timeout = session_timeout
         configuration.decompile_file = dict(
             zip(decompile_file, [True for x in decompile_file])) if decompile_file else None
@@ -191,12 +207,6 @@ class CommonDump():
         if not os.path.exists(target_file):
             logger.error('target_file not exist')
 
-        if os.path.exists(output_directory):
-            logger.info(f'removing output_directory')
-            try:
-                shutil.rmtree(output_directory)
-            except:
-                pass
         file_type = target_file_type or self.get_filetype(target_file)
         dispatch_to = self.action_map.get(file_type, None)
 

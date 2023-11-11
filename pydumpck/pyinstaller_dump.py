@@ -23,7 +23,7 @@ def run():
     parser.add_argument(
         '-o',
         '--output',
-        default=pydumpck.utils.paths.get_random_path('output'),
+        default=None,
         type=str,
         dest='output_directory',
         help='output archive file to (default: %(default)s).',

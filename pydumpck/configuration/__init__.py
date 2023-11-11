@@ -6,6 +6,7 @@ thread_timeout: int = 10  # timeout for single dump work
 progress_session_timeout: int = 60  # timeout for huge work
 process_timeout: int = 600  # timeout for total run
 thread_output_directory: str = None
+thread_output_directory_customed:bool = False # should flag if user customed.
 
 plugin_decompiler_enable_pycdc = False
 plugin_decompiler_enable_uncompyle6 = False
